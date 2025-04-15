@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "rootDir": ".",
+        "strict": true,
+        "target": "ES2022",
+        "types": []
+    },
+    "include": ["ts/**/*.ts"]
+}

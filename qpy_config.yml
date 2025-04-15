@@ -1,0 +1,19 @@
+short_name: truthtable
+namespace: qpy
+version: 0.1.0
+api_version: '0.1'
+author: innoCampus <info@isis.tu-berlin.de>
+name:
+  de: Wahrheitstabellen
+  en: Truth Tables
+languages:
+  - de
+  - en
+requirements:
+  - antlr4-python3-runtime
+  - sympy
+build_hooks:
+  pre:
+    - npm run build
+  post:
+    - npm run clean

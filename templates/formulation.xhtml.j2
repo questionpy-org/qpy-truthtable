@@ -1,0 +1,30 @@
+<div xmlns="http://www.w3.org/1999/xhtml">
+    <!--
+        TODO: Without the '\( \)' MathJax won't render any dynamically added formulas in Moodle with MathJax 2.x. Check
+              if there is an alternative way.
+    -->
+    <div class="formula">\( \)<span class="formula">{{ formula }}</span></div>
+
+    <table>
+        <thead>
+            <tr>
+                {% for variable in variables %}
+                <th class="formula">{{ variable }}</th>
+                {% endfor %}
+            </tr>
+            {% for _ in range(rows) %}
+            <tr>
+                {% for _ in variables %}
+                <td>
+                    <div class="formula-input-wrapper">
+                        <input type="number" min="0" max="1" class="formula-input" />
+                        <span class="formula-display" style="display: none;"/>
+                    </div>
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </thead>
+    </table>
+
+</div>

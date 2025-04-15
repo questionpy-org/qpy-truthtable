@@ -1,0 +1,34 @@
+{
+    "name": "truthtable",
+    "version": "0.1.0",
+    "description": "Dynamic truth tables for QuestionPy.",
+    "author": "innoCampus <info@isis.tu-berlin.de>",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "build": "npm run clean && npm run antlr && rollup -c --failAfterWarnings",
+        "lint": "npx eslint ts --ignore-pattern './ts/parser/generated/*'",
+        "fmt": "npx prettier ts --write",
+        "clean": "rimraf js",
+        "antlr": "npm run antlr:py & npm run antlr:js",
+        "antlr:py": "antlr4 -Dlanguage=Python3 -visitor -no-listener -o python/qpy/truthtable/formula/_parser/generated -Xexact-output-dir Bora.g4 && rimraf python/qpy/truthtable/formula/_parser/generated/*.{interp,tokens}",
+        "antlr:js": "antlr4 -Dlanguage=TypeScript -visitor -no-listener -o ts/parser/generated -Xexact-output-dir Bora.g4 && rimraf ts/parser/generated/*.{interp,tokens}"
+    },
+    "dependencies": {
+        "antlr4": "4.13.2"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.24.0",
+        "@rollup/plugin-node-resolve": "^16.0.1",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "eslint": "^9.24.0",
+        "eslint-config-prettier": "^10.1.2",
+        "prettier": "^3.5.3",
+        "rimraf": "^6.0.1",
+        "rollup": "^4.39.0",
+        "tslib": "^2.8.1",
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.30.1"
+    }
+}
