@@ -13,7 +13,7 @@ class ExampleAttempt(Attempt):
         self.expression_string = self.get_expression()
         self.expression_sympy = parse_string_to_sympy(self.expression_string)
         self.variables = list(sorted(self.expression_sympy.free_symbols, key=str))
-        self.results = list(truth_table(self.expression_sympy, self.variables, input=False))
+        self.results: list[bool] = list(truth_table(self.expression_sympy, self.variables, input=False))
         self.rows = 2 ** len(self.variables)
 
         # Functions used inside Jinja templates.
@@ -26,7 +26,7 @@ class ExampleAttempt(Attempt):
         })
 
     def _compute_score(self) -> float:
-        result = [None for _ in range(self.rows)]
+        result: list[None | bool] = [None for _ in range(self.rows)]
         for row in range(self.rows):
             result_row = self.response.get(f"result_row_{row}")
             if result_row:
