@@ -1,9 +1,5 @@
-<div xmlns="http://www.w3.org/1999/xhtml">
-    <!--
-        TODO: Without the '\( \)' MathJax won't render any dynamically added formulas in Moodle with MathJax 2.x. Check
-              if there is an alternative way.
-    -->
-    <div class="formula">\( \)<span class="formula">{{ formula }}</span></div>
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:qpy="http://questionpy.org/ns/question">
 
     <table>
         <thead>
@@ -11,20 +7,30 @@
                 {% for variable in variables %}
                 <th class="formula">{{ variable }}</th>
                 {% endfor %}
+                <th class="formula">{{ formula }}</th>
             </tr>
-            {% for _ in range(rows) %}
+        </thead>
+        <tbody>
+            {% for row in range(rows) %}
             <tr>
-                {% for _ in variables %}
+                {% for col in range(cols) %}
+                <td class="formula">{{ get_current_bit(row, col) }}</td>
+                {% endfor %}
                 <td>
                     <div class="formula-input-wrapper">
-                        <input type="number" min="0" max="1" class="formula-input" />
-                        <span class="formula-display" style="display: none;"/>
+                        <input type="text" name="result_row_{{ row }}" maxlength="1" pattern="0|1" class="formula-input" qpy:correct-response="{{ get_correct_response(row) }}" />
+                        <span class="formula-display" style="display: none;" />
                     </div>
                 </td>
-                {% endfor %}
             </tr>
             {% endfor %}
-        </thead>
+        </tbody>
     </table>
+
+    <!--
+        TODO: Without the '\( \)' MathJax won't render any dynamically added formulas in Moodle with MathJax 2.x. Check
+              if there is an alternative way.
+    -->
+    <div>\( \)</div>
 
 </div>
