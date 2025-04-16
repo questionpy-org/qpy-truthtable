@@ -43,8 +43,8 @@ function setupFormulaInputElement(inputElement: HTMLInputElement, displayElement
     });
 
     inputElement.addEventListener("blur", () => {
-        if (inputElement.value.trim() !== "") {
-            const formula = inputElement.value.trim();
+        const formula = inputElement.value.trim();
+        if (formula !== "") {
             renderFormula(formula, displayElement, format);
             hideAndShowElement(inputElement, displayElement);
         }
@@ -65,6 +65,14 @@ export function init(_attempt: object, [format]: [OutputFormat]) {
     for (const wrapper of formulaInputWrappers) {
         const input: HTMLInputElement = wrapper.querySelector(".formula-input")!;
         const display: HTMLSpanElement = wrapper.querySelector(".formula-display")!;
+
+        const formula = input.value.trim();
+        if (formula !== "") {
+            renderFormula(formula, display, format);
+            hideAndShowElement(input, display);
+        } else {
+            hideAndShowElement(display, input);
+        }
 
         setupFormulaInputElement(input, display, format);
     }
