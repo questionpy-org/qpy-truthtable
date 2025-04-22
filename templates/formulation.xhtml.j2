@@ -4,18 +4,24 @@
     <table>
         <thead>
             <tr>
+                <!-- Sorted list of every variable in the formula. -->
                 {% for variable in variables %}
                 <th class="formula">{{ variable }}</th>
                 {% endfor %}
+
+                <!-- The formula. -->
                 <th class="formula">{{ formula }}</th>
             </tr>
         </thead>
         <tbody>
             {% for row in range(rows) %}
             <tr>
+                <!-- Bits of the current row. -->
                 {% for col in range(cols) %}
-                <td class="formula">{{ get_current_bit(row, col) }}</td>
+                <th class="formula">{{ get_current_bit(row, col) }}</th>
                 {% endfor %}
+
+                <!-- Input field for the results of the formula. -->
                 <td>
                     <div class="formula-input-wrapper">
                         <input type="text" name="result_row_{{ row }}" maxlength="1" pattern="0|1" class="formula-input" style="display: none" qpy:correct-response="{{ get_correct_response(row) }}" />
