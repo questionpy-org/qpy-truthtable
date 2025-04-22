@@ -32,7 +32,7 @@ function hideAndShowElement(hideElement: HTMLElement, showElement: HTMLElement) 
     showElement.focus();
 }
 
-function setupFormulaInputElement(inputElement: HTMLInputElement, displayElement: HTMLElement, format: OutputFormat) {
+function initFormulaInputElement(inputElement: HTMLInputElement, displayElement: HTMLElement, format: OutputFormat) {
     inputElement.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
             event.preventDefault();
@@ -75,5 +75,7 @@ export function init(_attempt: object, [format]: [OutputFormat]) {
         }
 
         setupFormulaInputElement(input, display, format);
+    }
+        initFormulaInputElement(input, display, format);
     }
 }
