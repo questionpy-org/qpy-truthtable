@@ -1,3 +1,5 @@
+import json
+
 from sympy.logic.boolalg import truth_table, ibin
 
 from questionpy import Attempt, Question
@@ -6,13 +8,11 @@ from .form import MyModel
 from .formula import generate_formula_string, parse_string_to_sympy
 
 def get_result_input_name(row: int) -> str:
-    return f"result_{row}"
+    return f"result-{row}"
 
 
 class ExampleAttempt(Attempt):
     def _init_attempt(self) -> None:
-        self.call_js("main.js", "init", [self.question.options.display_format.name])
-
         self.expression_string = self.get_expression()
         self.expression_sympy = parse_string_to_sympy(self.expression_string)
         self.variables = list(sorted(self.expression_sympy.free_symbols, key=str))
@@ -20,6 +20,8 @@ class ExampleAttempt(Attempt):
 
         self.variable_count = len(self.variables)
         self.rows = 2 ** self.variable_count
+
+        self.call_js("main.js", "init", [self.question.options.display_format.name, self.rows])
 
         # Functions used inside Jinja templates.
         bits = list(ibin(self.variable_count, bits='all', str=True))
@@ -31,6 +33,23 @@ class ExampleAttempt(Attempt):
             "get_correct_response": self.get_correct_response,
             "get_result_input_name": get_result_input_name,
         })
+
+    def get_intermediates(self) -> dict:
+        if self.response is None or "intermediate-formulas" not in self.response:
+            return {}
+
+        intermediate_formulas = json.loads(self.response["intermediate-formulas"])
+        intermediate_results = json.loads(self.response["intermediate-results"])
+
+        intermediates = {}
+        for formula_id, formula in intermediate_formulas.items():
+            expression = parse_string_to_sympy(formula)
+            result: list[None | bool] = [None for _ in range(self.rows)]
+            for index, intermediate_result in enumerate(intermediate_results[formula_id]):
+                if intermediate_result:
+                    result[index] = intermediate_result == "1"
+            intermediates[expression] = result
+        return intermediates
 
     def _compute_score(self) -> float:
         result: list[None | bool] = [None for _ in range(self.rows)]

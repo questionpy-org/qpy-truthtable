@@ -108,7 +108,7 @@ class BoraVisitorImplementation extends BoraVisitor<string> {
     visitProg = (ctx: ProgContext) => this.visit(ctx.expr());
 }
 
-export const parseFormulaToLaTeX = (input: string, format: OutputFormat)=> {
+export const parseFormulaToLaTeX = (input: string, format: OutputFormat) => {
     const stream = new CharStream(input);
     const lexer = new BoraLexer(stream);
     const tokens = new CommonTokenStream(lexer);
@@ -118,4 +118,4 @@ export const parseFormulaToLaTeX = (input: string, format: OutputFormat)=> {
     const tree = parser.prog();
 
     return visitor.visit(tree);
-}
+};
