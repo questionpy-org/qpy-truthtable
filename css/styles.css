@@ -1,0 +1,47 @@
+table {
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: #ced4da;
+    border-bottom: 3px solid black;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #ededed;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #f6f6f6;
+}
+
+thead tr th:has(+th[class="formula"]),
+tbody tr th:last-of-type,
+thead tr th[class="formula"]:has(+th),
+tbody tr td:first-of-type:has(+td) {
+    border-right: 3px solid black;
+}
+
+thead .formula-input-wrapper input {
+    width: 8rem !important;
+}
+
+tbody .formula-input-wrapper input {
+    width: 3rem !important;
+    text-align: center;
+}
+
+td, th {
+    border: 1px solid black;
+    padding: 0.5rem;
+    height: 3.5rem;
+    text-align: center;
+}
+
+.bit, .variable {
+    padding: 1rem;
+}
+
+#add-column {
+    margin-top: 1rem;
+}

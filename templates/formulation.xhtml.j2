@@ -6,7 +6,7 @@
             <tr>
                 <!-- Sorted list of every variable in the formula. -->
                 {% for variable in variables %}
-                <th class="formula">{{ variable }}</th>
+                <th class="formula variable">{{ variable }}</th>
                 {% endfor %}
 
                 <!-- The formula. -->
@@ -18,7 +18,7 @@
             <tr>
                 <!-- Bits of the current row. -->
                 {% for col in range(cols) %}
-                <th>{{ get_current_bit(row, col) }}</th>
+                <th class="bit">{{ get_current_bit(row, col) }}</th>
                 {% endfor %}
 
                 <!-- Input field for the results of the formula. -->

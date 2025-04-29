@@ -16,12 +16,13 @@ class ExampleAttempt(Attempt):
         self.expression_string = self.get_expression()
         self.expression_sympy = parse_string_to_sympy(self.expression_string)
         self.variables = list(sorted(self.expression_sympy.free_symbols, key=str))
-        self.results: list[bool] = list(truth_table(self.expression_sympy, self.variables, input=False))
-
         self.variable_count = len(self.variables)
         self.rows = 2 ** self.variable_count
 
+        self.results: list[bool] = list(truth_table(self.expression_sympy, self.variables, input=False))
+
         self.call_js("main.js", "init", [self.question.options.display_format.name, self.rows])
+        self.use_css("styles.css")
 
         # Functions used inside Jinja templates.
         bits = list(ibin(self.variable_count, bits='all', str=True))
