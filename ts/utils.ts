@@ -1,4 +1,4 @@
-import { type OutputFormat, parseFormulaToLaTeX } from "./parser/parser.js";
+import { type OutputFormat, parseBoraToLaTeX } from "./parser/parser.js";
 
 /* eslint-disable */
 /**
@@ -27,7 +27,7 @@ export function render(element: Element) {
 
 /** Render the Bora-formula to the given element. */
 export function renderBora(formula: string, element: Element, format: OutputFormat) {
-    const latex = parseFormulaToLaTeX(formula, format);
+    const latex = parseBoraToLaTeX(formula, format);
     element.textContent = `\\( ${latex} \\)`;
     render(element);
 }

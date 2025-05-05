@@ -36,6 +36,7 @@ export default class BoraParser extends Parser {
 	public static readonly RULE_prog = 0;
 	public static readonly RULE_expr = 1;
 	public static readonly RULE_term = 2;
+	public static readonly RULE_factor = 3;
 	public static readonly literalNames: (string | null)[] = [ null, "'('", 
                                                             "')'", null, 
                                                             null, null, 
@@ -53,7 +54,7 @@ export default class BoraParser extends Parser {
                                                              "WS" ];
 	// tslint:disable:no-trailing-whitespace
 	public static readonly ruleNames: string[] = [
-		"prog", "expr", "term",
+		"prog", "expr", "term", "factor",
 	];
 	public get grammarFileName(): string { return "Bora.g4"; }
 	public get literalNames(): (string | null)[] { return BoraParser.literalNames; }
@@ -77,12 +78,12 @@ export default class BoraParser extends Parser {
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 7;
+			this.state = 9;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if ((((_la) & ~0x1F) === 0 && ((1 << _la) & 12362) !== 0)) {
 				{
-				this.state = 6;
+				this.state = 8;
 				this.expr(0);
 				}
 			}
@@ -122,40 +123,18 @@ export default class BoraParser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 13;
-			this._errHandler.sync(this);
-			switch (this._input.LA(1)) {
-			case 6:
-				{
-				localctx = new NotOperatorContext(this, localctx);
-				this._ctx = localctx;
-				_prevctx = localctx;
+			{
+			localctx = new TermExprContext(this, localctx);
+			this._ctx = localctx;
+			_prevctx = localctx;
 
-				this.state = 10;
-				this.match(BoraParser.NOT);
-				this.state = 11;
-				this.term(0);
-				}
-				break;
-			case 1:
-			case 3:
-			case 12:
-			case 13:
-				{
-				localctx = new TermExprContext(this, localctx);
-				this._ctx = localctx;
-				_prevctx = localctx;
-				this.state = 12;
-				this.term(0);
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
+			this.state = 12;
+			this.term(0);
 			}
 			this._ctx.stop = this._input.LT(-1);
-			this.state = 38;
+			this.state = 37;
 			this._errHandler.sync(this);
-			_alt = this._interp.adaptivePredict(this._input, 3, this._ctx);
+			_alt = this._interp.adaptivePredict(this._input, 2, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
 				if (_alt === 1) {
 					if (this._parseListeners != null) {
@@ -163,113 +142,113 @@ export default class BoraParser extends Parser {
 					}
 					_prevctx = localctx;
 					{
-					this.state = 36;
+					this.state = 35;
 					this._errHandler.sync(this);
-					switch ( this._interp.adaptivePredict(this._input, 2, this._ctx) ) {
+					switch ( this._interp.adaptivePredict(this._input, 1, this._ctx) ) {
 					case 1:
 						{
 						localctx = new AndOperatorContext(this, new ExprContext(this, _parentctx, _parentState));
 						this.pushNewRecursionContext(localctx, _startState, BoraParser.RULE_expr);
-						this.state = 15;
-						if (!(this.precpred(this._ctx, 9))) {
-							throw this.createFailedPredicateException("this.precpred(this._ctx, 9)");
+						this.state = 14;
+						if (!(this.precpred(this._ctx, 8))) {
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 8)");
 						}
-						this.state = 16;
+						this.state = 15;
 						this.match(BoraParser.AND);
-						this.state = 17;
-						this.expr(10);
+						this.state = 16;
+						this.expr(9);
 						}
 						break;
 					case 2:
 						{
 						localctx = new NandOperatorContext(this, new ExprContext(this, _parentctx, _parentState));
 						this.pushNewRecursionContext(localctx, _startState, BoraParser.RULE_expr);
-						this.state = 18;
-						if (!(this.precpred(this._ctx, 8))) {
-							throw this.createFailedPredicateException("this.precpred(this._ctx, 8)");
+						this.state = 17;
+						if (!(this.precpred(this._ctx, 7))) {
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 7)");
 						}
-						this.state = 19;
+						this.state = 18;
 						this.match(BoraParser.NAND);
-						this.state = 20;
-						this.expr(9);
+						this.state = 19;
+						this.expr(8);
 						}
 						break;
 					case 3:
 						{
 						localctx = new OrOperatorContext(this, new ExprContext(this, _parentctx, _parentState));
 						this.pushNewRecursionContext(localctx, _startState, BoraParser.RULE_expr);
-						this.state = 21;
-						if (!(this.precpred(this._ctx, 7))) {
-							throw this.createFailedPredicateException("this.precpred(this._ctx, 7)");
+						this.state = 20;
+						if (!(this.precpred(this._ctx, 6))) {
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 6)");
 						}
-						this.state = 22;
+						this.state = 21;
 						this.match(BoraParser.OR);
-						this.state = 23;
-						this.expr(8);
+						this.state = 22;
+						this.expr(7);
 						}
 						break;
 					case 4:
 						{
 						localctx = new NorOperatorContext(this, new ExprContext(this, _parentctx, _parentState));
 						this.pushNewRecursionContext(localctx, _startState, BoraParser.RULE_expr);
-						this.state = 24;
-						if (!(this.precpred(this._ctx, 6))) {
-							throw this.createFailedPredicateException("this.precpred(this._ctx, 6)");
+						this.state = 23;
+						if (!(this.precpred(this._ctx, 5))) {
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 5)");
 						}
-						this.state = 25;
+						this.state = 24;
 						this.match(BoraParser.NOR);
-						this.state = 26;
-						this.expr(7);
+						this.state = 25;
+						this.expr(6);
 						}
 						break;
 					case 5:
 						{
 						localctx = new XorOperatorContext(this, new ExprContext(this, _parentctx, _parentState));
 						this.pushNewRecursionContext(localctx, _startState, BoraParser.RULE_expr);
-						this.state = 27;
-						if (!(this.precpred(this._ctx, 5))) {
-							throw this.createFailedPredicateException("this.precpred(this._ctx, 5)");
+						this.state = 26;
+						if (!(this.precpred(this._ctx, 4))) {
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 4)");
 						}
-						this.state = 28;
+						this.state = 27;
 						this.match(BoraParser.XOR);
-						this.state = 29;
-						this.expr(6);
+						this.state = 28;
+						this.expr(5);
 						}
 						break;
 					case 6:
 						{
 						localctx = new XnorOperatorContext(this, new ExprContext(this, _parentctx, _parentState));
 						this.pushNewRecursionContext(localctx, _startState, BoraParser.RULE_expr);
-						this.state = 30;
-						if (!(this.precpred(this._ctx, 4))) {
-							throw this.createFailedPredicateException("this.precpred(this._ctx, 4)");
+						this.state = 29;
+						if (!(this.precpred(this._ctx, 3))) {
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 3)");
 						}
-						this.state = 31;
+						this.state = 30;
 						this.match(BoraParser.XNOR);
-						this.state = 32;
-						this.expr(5);
+						this.state = 31;
+						this.expr(4);
 						}
 						break;
 					case 7:
 						{
 						localctx = new ImpliesOperatorContext(this, new ExprContext(this, _parentctx, _parentState));
 						this.pushNewRecursionContext(localctx, _startState, BoraParser.RULE_expr);
-						this.state = 33;
-						if (!(this.precpred(this._ctx, 3))) {
-							throw this.createFailedPredicateException("this.precpred(this._ctx, 3)");
+						this.state = 32;
+						if (!(this.precpred(this._ctx, 2))) {
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 2)");
 						}
-						this.state = 34;
+						this.state = 33;
 						this.match(BoraParser.IMPLIES);
-						this.state = 35;
-						this.expr(4);
+						this.state = 34;
+						this.expr(3);
 						}
 						break;
 					}
 					}
 				}
-				this.state = 40;
+				this.state = 39;
 				this._errHandler.sync(this);
-				_alt = this._interp.adaptivePredict(this._input, 3, this._ctx);
+				_alt = this._interp.adaptivePredict(this._input, 2, this._ctx);
 			}
 			}
 		}
@@ -306,66 +285,18 @@ export default class BoraParser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 51;
-			this._errHandler.sync(this);
-			switch ( this._interp.adaptivePredict(this._input, 4, this._ctx) ) {
-			case 1:
-				{
-				localctx = new ImplicitVariableAndOperatorContext(this, localctx);
-				this._ctx = localctx;
-				_prevctx = localctx;
+			{
+			localctx = new FactorExprContext(this, localctx);
+			this._ctx = localctx;
+			_prevctx = localctx;
 
-				this.state = 42;
-				this.match(BoraParser.VARIABLE);
-				this.state = 43;
-				this.term(6);
-				}
-				break;
-			case 2:
-				{
-				localctx = new VariableContext(this, localctx);
-				this._ctx = localctx;
-				_prevctx = localctx;
-				this.state = 44;
-				this.match(BoraParser.VARIABLE);
-				}
-				break;
-			case 3:
-				{
-				localctx = new LiteralTrueContext(this, localctx);
-				this._ctx = localctx;
-				_prevctx = localctx;
-				this.state = 45;
-				this.match(BoraParser.TRUE);
-				}
-				break;
-			case 4:
-				{
-				localctx = new LiteralFalseContext(this, localctx);
-				this._ctx = localctx;
-				_prevctx = localctx;
-				this.state = 46;
-				this.match(BoraParser.FALSE);
-				}
-				break;
-			case 5:
-				{
-				localctx = new GroupFactorContext(this, localctx);
-				this._ctx = localctx;
-				_prevctx = localctx;
-				this.state = 47;
-				this.match(BoraParser.T__0);
-				this.state = 48;
-				this.expr(0);
-				this.state = 49;
-				this.match(BoraParser.T__1);
-				}
-				break;
+			this.state = 41;
+			this.factor();
 			}
 			this._ctx.stop = this._input.LT(-1);
-			this.state = 57;
+			this.state = 47;
 			this._errHandler.sync(this);
-			_alt = this._interp.adaptivePredict(this._input, 5, this._ctx);
+			_alt = this._interp.adaptivePredict(this._input, 3, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
 				if (_alt === 1) {
 					if (this._parseListeners != null) {
@@ -374,20 +305,20 @@ export default class BoraParser extends Parser {
 					_prevctx = localctx;
 					{
 					{
-					localctx = new ImplicitTermAndOperatorContext(this, new TermContext(this, _parentctx, _parentState));
+					localctx = new ImplicitAndOperatorContext(this, new TermContext(this, _parentctx, _parentState));
 					this.pushNewRecursionContext(localctx, _startState, BoraParser.RULE_term);
-					this.state = 53;
+					this.state = 43;
 					if (!(this.precpred(this._ctx, 1))) {
 						throw this.createFailedPredicateException("this.precpred(this._ctx, 1)");
 					}
-					this.state = 54;
+					this.state = 44;
 					this.term(2);
 					}
 					}
 				}
-				this.state = 59;
+				this.state = 49;
 				this._errHandler.sync(this);
-				_alt = this._interp.adaptivePredict(this._input, 5, this._ctx);
+				_alt = this._interp.adaptivePredict(this._input, 3, this._ctx);
 			}
 			}
 		}
@@ -405,6 +336,78 @@ export default class BoraParser extends Parser {
 		}
 		return localctx;
 	}
+	// @RuleVersion(0)
+	public factor(): FactorContext {
+		let localctx: FactorContext = new FactorContext(this, this._ctx, this.state);
+		this.enterRule(localctx, 6, BoraParser.RULE_factor);
+		try {
+			this.state = 59;
+			this._errHandler.sync(this);
+			switch (this._input.LA(1)) {
+			case 6:
+				localctx = new NotOperatorContext(this, localctx);
+				this.enterOuterAlt(localctx, 1);
+				{
+				this.state = 50;
+				this.match(BoraParser.NOT);
+				this.state = 51;
+				this.factor();
+				}
+				break;
+			case 3:
+				localctx = new VariableContext(this, localctx);
+				this.enterOuterAlt(localctx, 2);
+				{
+				this.state = 52;
+				this.match(BoraParser.VARIABLE);
+				}
+				break;
+			case 12:
+				localctx = new LiteralTrueContext(this, localctx);
+				this.enterOuterAlt(localctx, 3);
+				{
+				this.state = 53;
+				this.match(BoraParser.TRUE);
+				}
+				break;
+			case 13:
+				localctx = new LiteralFalseContext(this, localctx);
+				this.enterOuterAlt(localctx, 4);
+				{
+				this.state = 54;
+				this.match(BoraParser.FALSE);
+				}
+				break;
+			case 1:
+				localctx = new GroupFactorContext(this, localctx);
+				this.enterOuterAlt(localctx, 5);
+				{
+				this.state = 55;
+				this.match(BoraParser.T__0);
+				this.state = 56;
+				this.expr(0);
+				this.state = 57;
+				this.match(BoraParser.T__1);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (re) {
+			if (re instanceof RecognitionException) {
+				localctx.exception = re;
+				this._errHandler.reportError(this, re);
+				this._errHandler.recover(this, re);
+			} else {
+				throw re;
+			}
+		}
+		finally {
+			this.exitRule();
+		}
+		return localctx;
+	}
 
 	public sempred(localctx: RuleContext, ruleIndex: number, predIndex: number): boolean {
 		switch (ruleIndex) {
@@ -418,19 +421,19 @@ export default class BoraParser extends Parser {
 	private expr_sempred(localctx: ExprContext, predIndex: number): boolean {
 		switch (predIndex) {
 		case 0:
-			return this.precpred(this._ctx, 9);
-		case 1:
 			return this.precpred(this._ctx, 8);
-		case 2:
+		case 1:
 			return this.precpred(this._ctx, 7);
-		case 3:
+		case 2:
 			return this.precpred(this._ctx, 6);
-		case 4:
+		case 3:
 			return this.precpred(this._ctx, 5);
-		case 5:
+		case 4:
 			return this.precpred(this._ctx, 4);
-		case 6:
+		case 5:
 			return this.precpred(this._ctx, 3);
+		case 6:
+			return this.precpred(this._ctx, 2);
 		}
 		return true;
 	}
@@ -442,26 +445,25 @@ export default class BoraParser extends Parser {
 		return true;
 	}
 
-	public static readonly _serializedATN: number[] = [4,1,14,61,2,0,7,0,2,
-	1,7,1,2,2,7,2,1,0,3,0,8,8,0,1,1,1,1,1,1,1,1,3,1,14,8,1,1,1,1,1,1,1,1,1,
-	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,
-	37,8,1,10,1,12,1,40,9,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,3,2,52,
-	8,2,1,2,1,2,5,2,56,8,2,10,2,12,2,59,9,2,1,2,0,2,2,4,3,0,2,4,0,0,71,0,7,
-	1,0,0,0,2,13,1,0,0,0,4,51,1,0,0,0,6,8,3,2,1,0,7,6,1,0,0,0,7,8,1,0,0,0,8,
-	1,1,0,0,0,9,10,6,1,-1,0,10,11,5,6,0,0,11,14,3,4,2,0,12,14,3,4,2,0,13,9,
-	1,0,0,0,13,12,1,0,0,0,14,38,1,0,0,0,15,16,10,9,0,0,16,17,5,4,0,0,17,37,
-	3,2,1,10,18,19,10,8,0,0,19,20,5,8,0,0,20,37,3,2,1,9,21,22,10,7,0,0,22,23,
-	5,5,0,0,23,37,3,2,1,8,24,25,10,6,0,0,25,26,5,7,0,0,26,37,3,2,1,7,27,28,
-	10,5,0,0,28,29,5,9,0,0,29,37,3,2,1,6,30,31,10,4,0,0,31,32,5,10,0,0,32,37,
-	3,2,1,5,33,34,10,3,0,0,34,35,5,11,0,0,35,37,3,2,1,4,36,15,1,0,0,0,36,18,
-	1,0,0,0,36,21,1,0,0,0,36,24,1,0,0,0,36,27,1,0,0,0,36,30,1,0,0,0,36,33,1,
-	0,0,0,37,40,1,0,0,0,38,36,1,0,0,0,38,39,1,0,0,0,39,3,1,0,0,0,40,38,1,0,
-	0,0,41,42,6,2,-1,0,42,43,5,3,0,0,43,52,3,4,2,6,44,52,5,3,0,0,45,52,5,12,
-	0,0,46,52,5,13,0,0,47,48,5,1,0,0,48,49,3,2,1,0,49,50,5,2,0,0,50,52,1,0,
-	0,0,51,41,1,0,0,0,51,44,1,0,0,0,51,45,1,0,0,0,51,46,1,0,0,0,51,47,1,0,0,
-	0,52,57,1,0,0,0,53,54,10,1,0,0,54,56,3,4,2,2,55,53,1,0,0,0,56,59,1,0,0,
-	0,57,55,1,0,0,0,57,58,1,0,0,0,58,5,1,0,0,0,59,57,1,0,0,0,6,7,13,36,38,51,
-	57];
+	public static readonly _serializedATN: number[] = [4,1,14,62,2,0,7,0,2,
+	1,7,1,2,2,7,2,2,3,7,3,1,0,3,0,10,8,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,36,8,
+	1,10,1,12,1,39,9,1,1,2,1,2,1,2,1,2,1,2,5,2,46,8,2,10,2,12,2,49,9,2,1,3,
+	1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,3,3,60,8,3,1,3,0,2,2,4,4,0,2,4,6,0,0,70,
+	0,9,1,0,0,0,2,11,1,0,0,0,4,40,1,0,0,0,6,59,1,0,0,0,8,10,3,2,1,0,9,8,1,0,
+	0,0,9,10,1,0,0,0,10,1,1,0,0,0,11,12,6,1,-1,0,12,13,3,4,2,0,13,37,1,0,0,
+	0,14,15,10,8,0,0,15,16,5,4,0,0,16,36,3,2,1,9,17,18,10,7,0,0,18,19,5,8,0,
+	0,19,36,3,2,1,8,20,21,10,6,0,0,21,22,5,5,0,0,22,36,3,2,1,7,23,24,10,5,0,
+	0,24,25,5,7,0,0,25,36,3,2,1,6,26,27,10,4,0,0,27,28,5,9,0,0,28,36,3,2,1,
+	5,29,30,10,3,0,0,30,31,5,10,0,0,31,36,3,2,1,4,32,33,10,2,0,0,33,34,5,11,
+	0,0,34,36,3,2,1,3,35,14,1,0,0,0,35,17,1,0,0,0,35,20,1,0,0,0,35,23,1,0,0,
+	0,35,26,1,0,0,0,35,29,1,0,0,0,35,32,1,0,0,0,36,39,1,0,0,0,37,35,1,0,0,0,
+	37,38,1,0,0,0,38,3,1,0,0,0,39,37,1,0,0,0,40,41,6,2,-1,0,41,42,3,6,3,0,42,
+	47,1,0,0,0,43,44,10,1,0,0,44,46,3,4,2,2,45,43,1,0,0,0,46,49,1,0,0,0,47,
+	45,1,0,0,0,47,48,1,0,0,0,48,5,1,0,0,0,49,47,1,0,0,0,50,51,5,6,0,0,51,60,
+	3,6,3,0,52,60,5,3,0,0,53,60,5,12,0,0,54,60,5,13,0,0,55,56,5,1,0,0,56,57,
+	3,2,1,0,57,58,5,2,0,0,58,60,1,0,0,0,59,50,1,0,0,0,59,52,1,0,0,0,59,53,1,
+	0,0,0,59,54,1,0,0,0,59,55,1,0,0,0,60,7,1,0,0,0,5,9,35,37,47,59];
 
 	private static __ATN: ATN;
 	public static get _ATN(): ATN {
@@ -552,26 +554,6 @@ export class OrOperatorContext extends ExprContext {
 	public accept<Result>(visitor: BoraVisitor<Result>): Result {
 		if (visitor.visitOrOperator) {
 			return visitor.visitOrOperator(this);
-		} else {
-			return visitor.visitChildren(this);
-		}
-	}
-}
-export class NotOperatorContext extends ExprContext {
-	constructor(parser: BoraParser, ctx: ExprContext) {
-		super(parser, ctx.parentCtx, ctx.invokingState);
-		super.copyFrom(ctx);
-	}
-	public NOT(): TerminalNode {
-		return this.getToken(BoraParser.NOT, 0);
-	}
-	public term(): TermContext {
-		return this.getTypedRuleContext(TermContext, 0) as TermContext;
-	}
-	// @Override
-	public accept<Result>(visitor: BoraVisitor<Result>): Result {
-		if (visitor.visitNotOperator) {
-			return visitor.visitNotOperator(this);
 		} else {
 			return visitor.visitChildren(this);
 		}
@@ -723,8 +705,79 @@ export class TermContext extends ParserRuleContext {
 		super.copyFrom(ctx);
 	}
 }
-export class LiteralTrueContext extends TermContext {
+export class ImplicitAndOperatorContext extends TermContext {
 	constructor(parser: BoraParser, ctx: TermContext) {
+		super(parser, ctx.parentCtx, ctx.invokingState);
+		super.copyFrom(ctx);
+	}
+	public term_list(): TermContext[] {
+		return this.getTypedRuleContexts(TermContext) as TermContext[];
+	}
+	public term(i: number): TermContext {
+		return this.getTypedRuleContext(TermContext, i) as TermContext;
+	}
+	// @Override
+	public accept<Result>(visitor: BoraVisitor<Result>): Result {
+		if (visitor.visitImplicitAndOperator) {
+			return visitor.visitImplicitAndOperator(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+export class FactorExprContext extends TermContext {
+	constructor(parser: BoraParser, ctx: TermContext) {
+		super(parser, ctx.parentCtx, ctx.invokingState);
+		super.copyFrom(ctx);
+	}
+	public factor(): FactorContext {
+		return this.getTypedRuleContext(FactorContext, 0) as FactorContext;
+	}
+	// @Override
+	public accept<Result>(visitor: BoraVisitor<Result>): Result {
+		if (visitor.visitFactorExpr) {
+			return visitor.visitFactorExpr(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+
+
+export class FactorContext extends ParserRuleContext {
+	constructor(parser?: BoraParser, parent?: ParserRuleContext, invokingState?: number) {
+		super(parent, invokingState);
+    	this.parser = parser;
+	}
+    public get ruleIndex(): number {
+    	return BoraParser.RULE_factor;
+	}
+	public override copyFrom(ctx: FactorContext): void {
+		super.copyFrom(ctx);
+	}
+}
+export class NotOperatorContext extends FactorContext {
+	constructor(parser: BoraParser, ctx: FactorContext) {
+		super(parser, ctx.parentCtx, ctx.invokingState);
+		super.copyFrom(ctx);
+	}
+	public NOT(): TerminalNode {
+		return this.getToken(BoraParser.NOT, 0);
+	}
+	public factor(): FactorContext {
+		return this.getTypedRuleContext(FactorContext, 0) as FactorContext;
+	}
+	// @Override
+	public accept<Result>(visitor: BoraVisitor<Result>): Result {
+		if (visitor.visitNotOperator) {
+			return visitor.visitNotOperator(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+export class LiteralTrueContext extends FactorContext {
+	constructor(parser: BoraParser, ctx: FactorContext) {
 		super(parser, ctx.parentCtx, ctx.invokingState);
 		super.copyFrom(ctx);
 	}
@@ -740,8 +793,8 @@ export class LiteralTrueContext extends TermContext {
 		}
 	}
 }
-export class VariableContext extends TermContext {
-	constructor(parser: BoraParser, ctx: TermContext) {
+export class VariableContext extends FactorContext {
+	constructor(parser: BoraParser, ctx: FactorContext) {
 		super(parser, ctx.parentCtx, ctx.invokingState);
 		super.copyFrom(ctx);
 	}
@@ -757,8 +810,8 @@ export class VariableContext extends TermContext {
 		}
 	}
 }
-export class LiteralFalseContext extends TermContext {
-	constructor(parser: BoraParser, ctx: TermContext) {
+export class LiteralFalseContext extends FactorContext {
+	constructor(parser: BoraParser, ctx: FactorContext) {
 		super(parser, ctx.parentCtx, ctx.invokingState);
 		super.copyFrom(ctx);
 	}
@@ -774,48 +827,8 @@ export class LiteralFalseContext extends TermContext {
 		}
 	}
 }
-export class ImplicitVariableAndOperatorContext extends TermContext {
-	constructor(parser: BoraParser, ctx: TermContext) {
-		super(parser, ctx.parentCtx, ctx.invokingState);
-		super.copyFrom(ctx);
-	}
-	public VARIABLE(): TerminalNode {
-		return this.getToken(BoraParser.VARIABLE, 0);
-	}
-	public term(): TermContext {
-		return this.getTypedRuleContext(TermContext, 0) as TermContext;
-	}
-	// @Override
-	public accept<Result>(visitor: BoraVisitor<Result>): Result {
-		if (visitor.visitImplicitVariableAndOperator) {
-			return visitor.visitImplicitVariableAndOperator(this);
-		} else {
-			return visitor.visitChildren(this);
-		}
-	}
-}
-export class ImplicitTermAndOperatorContext extends TermContext {
-	constructor(parser: BoraParser, ctx: TermContext) {
-		super(parser, ctx.parentCtx, ctx.invokingState);
-		super.copyFrom(ctx);
-	}
-	public term_list(): TermContext[] {
-		return this.getTypedRuleContexts(TermContext) as TermContext[];
-	}
-	public term(i: number): TermContext {
-		return this.getTypedRuleContext(TermContext, i) as TermContext;
-	}
-	// @Override
-	public accept<Result>(visitor: BoraVisitor<Result>): Result {
-		if (visitor.visitImplicitTermAndOperator) {
-			return visitor.visitImplicitTermAndOperator(this);
-		} else {
-			return visitor.visitChildren(this);
-		}
-	}
-}
-export class GroupFactorContext extends TermContext {
-	constructor(parser: BoraParser, ctx: TermContext) {
+export class GroupFactorContext extends FactorContext {
+	constructor(parser: BoraParser, ctx: FactorContext) {
 		super(parser, ctx.parentCtx, ctx.invokingState);
 		super.copyFrom(ctx);
 	}

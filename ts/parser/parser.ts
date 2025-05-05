@@ -1,11 +1,14 @@
-import { CommonTokenStream, CharStream } from "antlr4";
+import {
+    CommonTokenStream,
+    CharStream,
+    ErrorListener,
+} from "antlr4";
 
 import BoraLexer from "./generated/BoraLexer.js";
 import BoraParser, {
     AndOperatorContext,
     GroupFactorContext,
-    ImplicitTermAndOperatorContext,
-    ImplicitVariableAndOperatorContext,
+    ImplicitAndOperatorContext,
     ImpliesOperatorContext,
     NandOperatorContext,
     NorOperatorContext,
@@ -43,9 +46,9 @@ class BoraVisitorImplementation extends BoraVisitor<string> {
     };
 
     visitNotOperator = (ctx: NotOperatorContext) => {
-        const inner = this.visit(ctx.term());
+        const factor = this.visit(ctx.factor());
 
-        return this.format === "MATHEMATICAL" ? `\\overline{${inner}}` : `\\neg (${inner})`;
+        return this.format === "MATHEMATICAL" ? `\\overline{${factor}}` : `\\neg (${factor})`;
     };
 
     visitNorOperator = (ctx: NorOperatorContext) => {
@@ -83,16 +86,9 @@ class BoraVisitorImplementation extends BoraVisitor<string> {
         return `(${left} \\implies ${right})`;
     };
 
-    visitImplicitTermAndOperator = (ctx: ImplicitTermAndOperatorContext) => {
+    visitImplicitAndOperator = (ctx: ImplicitAndOperatorContext) => {
         const left = this.visit(ctx.term(0));
         const right = this.visit(ctx.term(1));
-
-        return this.format === "MATHEMATICAL" ? `${left} \\cdot ${right}` : `${left} \\land ${right}`;
-    };
-
-    visitImplicitVariableAndOperator = (ctx: ImplicitVariableAndOperatorContext) => {
-        const left = ctx.VARIABLE().getText();
-        const right = this.visit(ctx.term());
 
         return this.format === "MATHEMATICAL" ? `${left} \\cdot ${right}` : `${left} \\land ${right}`;
     };
@@ -108,11 +104,24 @@ class BoraVisitorImplementation extends BoraVisitor<string> {
     visitProg = (ctx: ProgContext) => this.visit(ctx.expr());
 }
 
-export const parseFormulaToLaTeX = (input: string, format: OutputFormat) => {
+class BoraErrorListener extends ErrorListener<number> {
+    syntaxError() {
+        throw new Error("Invalid input.");
+    }
+}
+
+
+export const parseBoraToLaTeX = (input: string, format: OutputFormat) => {
     const stream = new CharStream(input);
+
     const lexer = new BoraLexer(stream);
+    lexer.removeErrorListeners();
+    lexer.addErrorListener(new BoraErrorListener())
+
     const tokens = new CommonTokenStream(lexer);
     const parser = new BoraParser(tokens);
+    parser.removeErrorListeners();
+    parser.addErrorListener(new BoraErrorListener())
 
     const visitor = new BoraVisitorImplementation(format);
     const tree = parser.prog();

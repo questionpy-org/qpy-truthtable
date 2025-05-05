@@ -8,6 +8,8 @@ export class FormulaInput {
 
     readonly #format: OutputFormat;
 
+    #lastFormula: string | null = null;
+
     constructor(wrapperElement: HTMLDivElement, inputElement: HTMLInputElement, displayElement: HTMLSpanElement, format: OutputFormat, enabled: boolean) {
         this.#wrapperElement = wrapperElement;
         this.#wrapperElement.classList.add("formula-input-wrapper");
@@ -26,8 +28,12 @@ export class FormulaInput {
 
         const formula = this.getInput().trim();
         if (formula !== "") {
-            renderBora(formula, this.#displayElement, this.#format);
-            this.viewRenderedFormula();
+            try {
+                renderBora(formula, this.#displayElement, this.#format);
+                this.viewRenderedFormula();
+            } catch {
+                this.setInputValidity("invalid");
+            }
         } else {
             this.viewInputField();
         }
@@ -39,19 +45,32 @@ export class FormulaInput {
         }
     }
 
+    private setInputValidity(validity: "valid" | "invalid") {
+        if (validity === "valid") {
+            if (this.#inputElement.classList.contains("is-invalid")) {
+                this.#inputElement.setCustomValidity("");
+                this.#inputElement.reportValidity();
+                this.#inputElement.classList.remove("is-invalid");
+            }
+        } else {
+            this.#inputElement.setCustomValidity("Invalid formula.");
+            this.#inputElement.reportValidity();
+            this.#inputElement.classList.add("is-invalid");
+        }
+    }
+
     viewInputField() {
         hideAndShowElement(this.#displayElement, this.#inputElement);
     }
 
     viewRenderedFormula() {
-        if (this.getInput().trim() !== "") {
-            hideAndShowElement(this.#inputElement, this.#displayElement);
-        }
+        hideAndShowElement(this.#inputElement, this.#displayElement);
     }
 
     get element(): HTMLDivElement {
         return this.#wrapperElement;
     }
+
     get inputElement(): HTMLInputElement {
         return this.#inputElement;
     }
@@ -60,24 +79,46 @@ export class FormulaInput {
         return this.#inputElement.value;
     }
 
+    private updateRendering() {
+        const formula = this.getInput().trim();
+        if (formula === "") {
+            return;
+        }
+
+        if (formula !== this.#lastFormula) {
+            try {
+                renderBora(formula, this.#displayElement, this.#format);
+                this.#inputElement.setCustomValidity("");
+                this.#inputElement.reportValidity();
+                this.#lastFormula = formula;
+                this.viewRenderedFormula();
+            } catch {
+                this.setInputValidity("invalid");
+            }
+        } else {
+            this.viewRenderedFormula();
+        }
+    }
+
     private setupEventListeners() {
         this.#inputElement.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
                 event.preventDefault();
-                this.viewRenderedFormula();
+                this.updateRendering();
             }
         });
 
         this.#inputElement.addEventListener("blur", () => {
-            this.viewRenderedFormula();
+            this.updateRendering();
         });
 
         this.#inputElement.addEventListener("change", () => {
-            const formula = this.getInput().trim();
-            if (formula !== "") {
-                renderBora(formula, this.#displayElement, this.#format);
-            }
-        })
+            this.updateRendering();
+        });
+
+        this.#inputElement.addEventListener("input", () => {
+            this.setInputValidity("valid");
+        });
 
         this.#displayElement.addEventListener("click", () => this.viewInputField());
     }

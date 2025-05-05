@@ -24,11 +24,6 @@ class BoraVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by BoraParser#notOperator.
-    def visitNotOperator(self, ctx:BoraParser.NotOperatorContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by BoraParser#termExpr.
     def visitTermExpr(self, ctx:BoraParser.TermExprContext):
         return self.visitChildren(ctx)
@@ -59,8 +54,18 @@ class BoraVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by BoraParser#literalTrue.
-    def visitLiteralTrue(self, ctx:BoraParser.LiteralTrueContext):
+    # Visit a parse tree produced by BoraParser#implicitAndOperator.
+    def visitImplicitAndOperator(self, ctx:BoraParser.ImplicitAndOperatorContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by BoraParser#factorExpr.
+    def visitFactorExpr(self, ctx:BoraParser.FactorExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by BoraParser#notOperator.
+    def visitNotOperator(self, ctx:BoraParser.NotOperatorContext):
         return self.visitChildren(ctx)
 
 
@@ -69,18 +74,13 @@ class BoraVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by BoraParser#literalTrue.
+    def visitLiteralTrue(self, ctx:BoraParser.LiteralTrueContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by BoraParser#literalFalse.
     def visitLiteralFalse(self, ctx:BoraParser.LiteralFalseContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by BoraParser#implicitVariableAndOperator.
-    def visitImplicitVariableAndOperator(self, ctx:BoraParser.ImplicitVariableAndOperatorContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by BoraParser#implicitTermAndOperator.
-    def visitImplicitTermAndOperator(self, ctx:BoraParser.ImplicitTermAndOperatorContext):
         return self.visitChildren(ctx)
 
 

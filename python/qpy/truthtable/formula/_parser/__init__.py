@@ -17,7 +17,7 @@ class BoraVisitorImplementation(BoraVisitor):
         return Or(self.visit(ctx.expr(0)), self.visit(ctx.expr(1)))
 
     def visitNotOperator(self, ctx: BoraParser.NotOperatorContext) -> Not:
-        return Not(self.visit(ctx.term()))
+        return Not(self.visit(ctx.factor()))
 
     def visitNorOperator(self, ctx:BoraParser.NorOperatorContext) -> Nor:
         return Nor(self.visit(ctx.expr(0)), self.visit(ctx.expr(1)))
@@ -34,11 +34,8 @@ class BoraVisitorImplementation(BoraVisitor):
     def visitImpliesOperator(self, ctx:BoraParser.ImpliesOperatorContext) -> Implies:
         return Implies(self.visit(ctx.expr(0)), self.visit(ctx.expr(1)))
 
-    def visitImplicitTermAndOperator(self, ctx: BoraParser.ImplicitTermAndOperatorContext) -> And:
+    def visitImplicitAndOperator(self, ctx:BoraParser.ImplicitAndOperatorContext):
         return And(self.visit(ctx.term(0)), self.visit(ctx.term(1)))
-
-    def visitImplicitVariableAndOperator(self, ctx: BoraParser.ImplicitVariableAndOperatorContext) -> And:
-        return And(Symbol(ctx.VARIABLE().getText()), self.visit(ctx.term()))
 
     def visitVariable(self, ctx: BoraParser.VariableContext) -> Symbol:
         return Symbol(ctx.VARIABLE().getText())

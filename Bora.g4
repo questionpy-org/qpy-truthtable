@@ -1,24 +1,28 @@
 grammar Bora;
 
-prog: expr?;
+prog
+    : expr?;
 
-expr: expr AND expr     # andOperator
+expr
+    : expr AND expr     # andOperator
     | expr NAND expr    # nandOperator
     | expr OR expr      # orOperator
     | expr NOR expr     # norOperator
     | expr XOR expr     # xorOperator
     | expr XNOR expr    # xnorOperator
     | expr IMPLIES expr # impliesOperator
-    | NOT term          # notOperator
     | term              # termExpr;
 
-term: VARIABLE term     # implicitVariableAndOperator
+term
+    : factor            # factorExpr
+    | term term         # implicitAndOperator;
+
+factor
+    : NOT factor        # notOperator
     | VARIABLE          # variable
     | TRUE              # literalTrue
     | FALSE             # literalFalse
-    | '(' expr ')'      # groupFactor
-    | term term         # implicitTermAndOperator;
-
+    | '(' expr ')'      # groupFactor;
 
 VARIABLE: [a-zA-Z];
 
