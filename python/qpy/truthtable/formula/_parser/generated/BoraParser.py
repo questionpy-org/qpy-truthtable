@@ -20,8 +20,8 @@ def serializedATN():
         14,15,10,8,0,0,15,16,5,4,0,0,16,36,3,2,1,9,17,18,10,7,0,0,18,19,
         5,8,0,0,19,36,3,2,1,8,20,21,10,6,0,0,21,22,5,5,0,0,22,36,3,2,1,7,
         23,24,10,5,0,0,24,25,5,7,0,0,25,36,3,2,1,6,26,27,10,4,0,0,27,28,
-        5,9,0,0,28,36,3,2,1,5,29,30,10,3,0,0,30,31,5,10,0,0,31,36,3,2,1,
-        4,32,33,10,2,0,0,33,34,5,11,0,0,34,36,3,2,1,3,35,14,1,0,0,0,35,17,
+        5,9,0,0,28,36,3,2,1,5,29,30,10,3,0,0,30,31,5,11,0,0,31,36,3,2,1,
+        4,32,33,10,2,0,0,33,34,5,10,0,0,34,36,3,2,1,3,35,14,1,0,0,0,35,17,
         1,0,0,0,35,20,1,0,0,0,35,23,1,0,0,0,35,26,1,0,0,0,35,29,1,0,0,0,
         35,32,1,0,0,0,36,39,1,0,0,0,37,35,1,0,0,0,37,38,1,0,0,0,38,3,1,0,
         0,0,39,37,1,0,0,0,40,41,6,2,-1,0,41,42,3,6,3,0,42,47,1,0,0,0,43,
@@ -411,27 +411,27 @@ class BoraParser ( Parser ):
                         pass
 
                     elif la_ == 6:
-                        localctx = BoraParser.XnorOperatorContext(self, BoraParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = BoraParser.ImpliesOperatorContext(self, BoraParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 29
                         if not self.precpred(self._ctx, 3):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 3)")
                         self.state = 30
-                        self.match(BoraParser.XNOR)
+                        self.match(BoraParser.IMPLIES)
                         self.state = 31
                         self.expr(4)
                         pass
 
                     elif la_ == 7:
-                        localctx = BoraParser.ImpliesOperatorContext(self, BoraParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = BoraParser.XnorOperatorContext(self, BoraParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 32
                         if not self.precpred(self._ctx, 2):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 2)")
                         self.state = 33
-                        self.match(BoraParser.IMPLIES)
+                        self.match(BoraParser.XNOR)
                         self.state = 34
                         self.expr(3)
                         pass

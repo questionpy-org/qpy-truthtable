@@ -217,28 +217,28 @@ export default class BoraParser extends Parser {
 						break;
 					case 6:
 						{
-						localctx = new XnorOperatorContext(this, new ExprContext(this, _parentctx, _parentState));
+						localctx = new ImpliesOperatorContext(this, new ExprContext(this, _parentctx, _parentState));
 						this.pushNewRecursionContext(localctx, _startState, BoraParser.RULE_expr);
 						this.state = 29;
 						if (!(this.precpred(this._ctx, 3))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 3)");
 						}
 						this.state = 30;
-						this.match(BoraParser.XNOR);
+						this.match(BoraParser.IMPLIES);
 						this.state = 31;
 						this.expr(4);
 						}
 						break;
 					case 7:
 						{
-						localctx = new ImpliesOperatorContext(this, new ExprContext(this, _parentctx, _parentState));
+						localctx = new XnorOperatorContext(this, new ExprContext(this, _parentctx, _parentState));
 						this.pushNewRecursionContext(localctx, _startState, BoraParser.RULE_expr);
 						this.state = 32;
 						if (!(this.precpred(this._ctx, 2))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 2)");
 						}
 						this.state = 33;
-						this.match(BoraParser.IMPLIES);
+						this.match(BoraParser.XNOR);
 						this.state = 34;
 						this.expr(3);
 						}
@@ -455,7 +455,7 @@ export default class BoraParser extends Parser {
 	0,14,15,10,8,0,0,15,16,5,4,0,0,16,36,3,2,1,9,17,18,10,7,0,0,18,19,5,8,0,
 	0,19,36,3,2,1,8,20,21,10,6,0,0,21,22,5,5,0,0,22,36,3,2,1,7,23,24,10,5,0,
 	0,24,25,5,7,0,0,25,36,3,2,1,6,26,27,10,4,0,0,27,28,5,9,0,0,28,36,3,2,1,
-	5,29,30,10,3,0,0,30,31,5,10,0,0,31,36,3,2,1,4,32,33,10,2,0,0,33,34,5,11,
+	5,29,30,10,3,0,0,30,31,5,11,0,0,31,36,3,2,1,4,32,33,10,2,0,0,33,34,5,10,
 	0,0,34,36,3,2,1,3,35,14,1,0,0,0,35,17,1,0,0,0,35,20,1,0,0,0,35,23,1,0,0,
 	0,35,26,1,0,0,0,35,29,1,0,0,0,35,32,1,0,0,0,36,39,1,0,0,0,37,35,1,0,0,0,
 	37,38,1,0,0,0,38,3,1,0,0,0,39,37,1,0,0,0,40,41,6,2,-1,0,41,42,3,6,3,0,42,

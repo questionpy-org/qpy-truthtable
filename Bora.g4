@@ -9,8 +9,8 @@ expr
     | expr OR expr      # orOperator
     | expr NOR expr     # norOperator
     | expr XOR expr     # xorOperator
-    | expr XNOR expr    # xnorOperator
     | expr IMPLIES expr # impliesOperator
+    | expr XNOR expr    # xnorOperator
     | term              # termExpr;
 
 term
