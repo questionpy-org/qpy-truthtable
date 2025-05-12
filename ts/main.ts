@@ -1,7 +1,7 @@
 import { type OutputFormat } from "./parser/parser.js";
-import {renderBora} from "./utils";
-import {FormulaInput} from "./formula_input_element";
-import {setupButtonToAddIntermediateFormula, viewExistingIntermediateFormulas} from "./intermediate_formulas";
+import { renderBora } from "./utils";
+import { FormulaInput } from "./formula_input_element";
+import { setupButtonToAddIntermediateFormula, viewExistingIntermediateFormulas } from "./intermediate_formulas";
 
 export function init(attempt: object, [format, total_rows]: [OutputFormat, number]) {
     initFormulaElements(format);

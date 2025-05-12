@@ -1,11 +1,10 @@
-import {OutputFormat} from "./parser/parser";
-import {createFormulaInput, type FormulaInput} from "./formula_input_element";
+import { OutputFormat } from "./parser/parser";
+import { createFormulaInput, type FormulaInput } from "./formula_input_element";
 
 const tableElement = document.querySelector("table")!;
 const intermediateCounterElement = document.getElementById("intermediate-counter")! as HTMLInputElement;
 const intermediateFormulasElement = document.getElementById("intermediate-formulas")! as HTMLInputElement;
 const intermediateResultsElement = document.getElementById("intermediate-results")! as HTMLInputElement;
-
 
 export function setupButtonToAddIntermediateFormula(total_rows: number, format: OutputFormat) {
     const addColumnButton = document.querySelector("#add-column")!;
@@ -23,7 +22,13 @@ export function setupButtonToAddIntermediateFormula(total_rows: number, format: 
                 initValues(intermediateFormulaId, total_rows);
             } else {
                 cellElement = document.createElement("td");
-                intermediateFormulaInput = createIntermediateResultInput("", intermediateFormulaId, index - 1, format, true);
+                intermediateFormulaInput = createIntermediateResultInput(
+                    "",
+                    intermediateFormulaId,
+                    index - 1,
+                    format,
+                    true,
+                );
             }
 
             cellElement.appendChild(intermediateFormulaInput.element);
@@ -57,20 +62,36 @@ export function viewExistingIntermediateFormulas(format: OutputFormat, isActive:
 
     for (const [intermediateFormulaId, intermediateFormula] of Object.entries(intermediateFormulas)) {
         const cellElement = document.createElement("th");
-        const intermediateFormulaInput = createIntermediateFormulaInput(intermediateFormula, parseInt(intermediateFormulaId), format, isActive);
+        const intermediateFormulaInput = createIntermediateFormulaInput(
+            intermediateFormula,
+            parseInt(intermediateFormulaId),
+            format,
+            isActive,
+        );
         cellElement.appendChild(intermediateFormulaInput.element);
         rows[0].appendChild(cellElement);
 
         for (const [index, intermediateResult] of Object.entries(intermediateResults[intermediateFormulaId])) {
             const cellElement = document.createElement("td");
-            const intermediateResultInput = createIntermediateResultInput(intermediateResult, parseInt(intermediateFormulaId), parseInt(index), format, isActive);
+            const intermediateResultInput = createIntermediateResultInput(
+                intermediateResult,
+                parseInt(intermediateFormulaId),
+                parseInt(index),
+                format,
+                isActive,
+            );
             cellElement.appendChild(intermediateResultInput.element);
             rows[parseInt(index) + 1].appendChild(cellElement);
         }
     }
 }
 
-function createIntermediateFormulaInput(formula: string, intermediateFormulaId: number, format: OutputFormat, enabled: boolean): FormulaInput {
+function createIntermediateFormulaInput(
+    formula: string,
+    intermediateFormulaId: number,
+    format: OutputFormat,
+    enabled: boolean,
+): FormulaInput {
     const formulaInputElement = createFormulaInput(formula, format, enabled);
     formulaInputElement.inputElement.setAttribute("data-intermediate-formula", `${intermediateFormulaId}`);
 
@@ -86,7 +107,13 @@ function createIntermediateFormulaInput(formula: string, intermediateFormulaId: 
     return formulaInputElement;
 }
 
-function createIntermediateResultInput(formula: string, intermediateFormulaId: number, row: number, format: OutputFormat, enabled: boolean): FormulaInput {
+function createIntermediateResultInput(
+    formula: string,
+    intermediateFormulaId: number,
+    row: number,
+    format: OutputFormat,
+    enabled: boolean,
+): FormulaInput {
     const resultInputElement = createFormulaInput(formula, format, enabled);
     resultInputElement.inputElement.maxLength = 1;
     resultInputElement.inputElement.pattern = "0|1";
@@ -96,7 +123,9 @@ function createIntermediateResultInput(formula: string, intermediateFormulaId: n
     if (enabled) {
         resultInputElement.inputElement.addEventListener("change", () => {
             const resultId = parseInt(resultInputElement.inputElement.getAttribute("data-intermediate-result")!);
-            const belongsToFormulaId = resultInputElement.inputElement.getAttribute("data-intermediate-result-belongs-to")!;
+            const belongsToFormulaId = resultInputElement.inputElement.getAttribute(
+                "data-intermediate-result-belongs-to",
+            )!;
 
             const intermediateResults = JSON.parse(intermediateResultsElement.value) as Record<string, string[]>;
             intermediateResults[belongsToFormulaId][resultId] = resultInputElement.getInput();

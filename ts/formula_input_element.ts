@@ -1,5 +1,5 @@
-import {OutputFormat} from "./parser/parser";
-import {hideAndShowElement, renderBora} from "./utils";
+import { OutputFormat } from "./parser/parser";
+import { hideAndShowElement, renderBora } from "./utils";
 
 export class FormulaInput {
     readonly #wrapperElement: HTMLDivElement;
@@ -10,7 +10,13 @@ export class FormulaInput {
 
     #lastFormula: string | null = null;
 
-    constructor(wrapperElement: HTMLDivElement, inputElement: HTMLInputElement, displayElement: HTMLSpanElement, format: OutputFormat, enabled: boolean) {
+    constructor(
+        wrapperElement: HTMLDivElement,
+        inputElement: HTMLInputElement,
+        displayElement: HTMLSpanElement,
+        format: OutputFormat,
+        enabled: boolean,
+    ) {
         this.#wrapperElement = wrapperElement;
         this.#wrapperElement.classList.add("formula-input-wrapper");
 
@@ -132,5 +138,4 @@ export function createFormulaInput(formula: string, format: OutputFormat, enable
     inputElement.value = formula;
 
     return new FormulaInput(wrapperElement, inputElement, displayElement, format, enabled);
-
 }

@@ -1,12 +1,9 @@
-import {
-    CommonTokenStream,
-    CharStream,
-    ErrorListener,
-} from "antlr4";
+import { CommonTokenStream, CharStream, ErrorListener } from "antlr4";
 
 import BoraLexer from "./generated/BoraLexer.js";
 import BoraParser, {
-    AndOperatorContext, ExprContext,
+    AndOperatorContext,
+    ExprContext,
     GroupFactorContext,
     ImplicitAndOperatorContext,
     ImpliesOperatorContext,
@@ -24,7 +21,7 @@ import BoraVisitor from "./generated/BoraVisitor.js";
 export type OutputFormat = "MATHEMATICAL" | "SYMBOLICAL";
 
 interface BinaryOperatorContext {
-    expr(i: number): ExprContext,
+    expr(i: number): ExprContext;
 }
 
 class BoraVisitorImplementation extends BoraVisitor<string> {
@@ -50,7 +47,7 @@ class BoraVisitorImplementation extends BoraVisitor<string> {
     visitNotOperator = (ctx: NotOperatorContext) => {
         const factor = this.visit(ctx.factor());
         return this.format === "MATHEMATICAL" ? `\\overline{${factor}}` : `\\neg ${factor}`;
-    }
+    };
 
     visitNorOperator = (ctx: NorOperatorContext) => {
         const [left, right] = this.#getBinaryOperands(ctx);
@@ -101,18 +98,17 @@ class BoraErrorListener extends ErrorListener<number> {
     }
 }
 
-
 export const parseBoraToLaTeX = (input: string, format: OutputFormat) => {
     const stream = new CharStream(input);
 
     const lexer = new BoraLexer(stream);
     lexer.removeErrorListeners();
-    lexer.addErrorListener(new BoraErrorListener())
+    lexer.addErrorListener(new BoraErrorListener());
 
     const tokens = new CommonTokenStream(lexer);
     const parser = new BoraParser(tokens);
     parser.removeErrorListeners();
-    parser.addErrorListener(new BoraErrorListener())
+    parser.addErrorListener(new BoraErrorListener());
 
     const visitor = new BoraVisitorImplementation(format);
     const tree = parser.prog();

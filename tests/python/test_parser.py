@@ -68,7 +68,7 @@ def binary_operator_test_cases() -> list[pytest.param]:
 
 
 @pytest.mark.parametrize("string_operator, sympy_operator", binary_operator_test_cases())
-def test_binary_operators(sympy_operator, string_operator, ):
+def test_binary_operators(sympy_operator, string_operator):
     assert parse_string_to_sympy(f"x {string_operator} y") == sympy_operator(x, y)
 
     with pytest.raises(Exception):
@@ -82,7 +82,7 @@ def test_binary_operators(sympy_operator, string_operator, ):
 
 
 @pytest.mark.parametrize("operator", [
-    "not", "NOT", "~"
+    "not", "NOT", "~",
 ])
 def test_not_operator(operator):
     assert parse_string_to_sympy(f"{operator} x") == Not(x)
