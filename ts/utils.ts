@@ -1,4 +1,5 @@
 import { type OutputFormat, parseBoraToLaTeX } from "./parser/parser.js";
+import { renderLaTeX } from "./mathjax";
 
 /* eslint-disable */
 /**
@@ -27,9 +28,8 @@ export function render(element: Element) {
 
 /** Render the Bora-formula to the given element. */
 export function renderBora(formula: string, element: Element, format: OutputFormat) {
-    const latex = parseBoraToLaTeX(formula, format);
-    element.textContent = `\\( ${latex} \\)`;
-    render(element);
+    element.textContent = parseBoraToLaTeX(formula, format);
+    renderLaTeX(element).catch(console.error);
 }
 
 /** Hides one element and shows the other. */
