@@ -7,7 +7,7 @@ import { BaseMathJaxHelper } from "./base";
  * Docs: https://docs.mathjax.org/en/v2.7-latest/
  */
 export class MathJax2Helper extends BaseMathJaxHelper {
-    protected cdnUrl = "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS_CHTML";
+    protected cdnUrl = "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js";
 
     protected loadFromCdn() {
         // Configure MathJax.
@@ -15,6 +15,8 @@ export class MathJax2Helper extends BaseMathJaxHelper {
         script.type = "text/x-mathjax-config";
         script.text = `
             MathJax.Hub.Config({
+                jax: ["input/TeX","output/CommonHTML"],
+                extensions: ["tex2jax.js", "Safe.js"],
                 tex2jax: {
                     inlineMath: [["\\\\(", "\\\\)"]],
                     displayMath: [["\\\\[", "\\\\]"]],

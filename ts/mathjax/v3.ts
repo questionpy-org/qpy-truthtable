@@ -17,10 +17,6 @@ export class MathJax3Helper extends BaseMathJaxHelper {
                 inlineMath: [["\\\\(", "\\\\)"]],
                 displayMath: [["\\\\[", "\\\\]"]],
                 processEscapes: true,
-                autoload: {
-                    color: [],
-                    colorv2: ["color"],
-                },
                 packages: { "[+]": ["noerrors"] },
             },
             startup: {
@@ -31,7 +27,7 @@ export class MathJax3Helper extends BaseMathJaxHelper {
                 processHtmlClass: "tex2jax_process",
             },
             loader: {
-                load: ["[tex]/noerrors"],
+                load: ["[tex]/noerrors", "ui/safe"],
             },
         };
         return super.loadFromCdn();
