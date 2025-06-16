@@ -6,13 +6,11 @@ import { setupButtonToAddIntermediateFormula, viewExistingIntermediateFormulas }
 export function init(attempt: object, [format, total_rows]: [OutputFormat, number]) {
     initFormulaElements(format);
     // @ts-expect-error Attempt object definition is not here.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    initFormulaInputElements(format, attempt.isActive);
+    initFormulaInputElements(format, !attempt.readOnly);
     // @ts-expect-error Attempt object definition is not here.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    viewExistingIntermediateFormulas(format, attempt.isActive);
+    viewExistingIntermediateFormulas(format, !attempt.readOnly);
     // @ts-expect-error Attempt object definition is not here.
-    if (attempt.isActive) {
+    if (!attempt.readOnly) {
         setupButtonToAddIntermediateFormula(total_rows, format);
     }
 }
