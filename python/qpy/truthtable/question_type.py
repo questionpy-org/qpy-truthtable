@@ -19,7 +19,7 @@ class ExampleAttempt(Attempt):
         self.variable_count = len(self.variables)
         self.rows = 2 ** self.variable_count
 
-        self.results: list[bool] = list(truth_table(self.expression_sympy, self.variables, input=False))
+        self.solution: list[bool] = list(truth_table(self.expression_sympy, self.variables, input=False))
 
         self.call_js("main.js", "init", [self.question.options.display_format.name, self.rows])
         self.use_css("styles.css")
@@ -27,7 +27,7 @@ class ExampleAttempt(Attempt):
         # Functions used inside Jinja templates.
         bits = list(ibin(self.variable_count, bits='all', str=True))
         self.get_current_bit = lambda row, col: bits[row][col]
-        self.get_correct_response = lambda row: "1" if self.results[row] else "0"
+        self.get_correct_response = lambda row: "1" if self.solution[row] else "0"
 
         self.jinja2.globals.update({
             "get_current_bit": self.get_current_bit,
@@ -36,14 +36,16 @@ class ExampleAttempt(Attempt):
         })
 
     def get_intermediates(self) -> dict:
-        if self.response is None or "intermediate-formulas" not in self.response:
+        if self.response is None or not (data := self.response.get("data")):
             return {}
 
-        intermediate_formulas = json.loads(self.response["intermediate-formulas"])
-        intermediate_results = json.loads(self.response["intermediate-results"])
+        intermediate_formulas = data.get("intermediate-formulas", {})
+        intermediate_results = data.get("intermediate-results", {})
 
         intermediates = {}
         for formula_id, formula in intermediate_formulas.items():
+            if not formula:
+                continue
             expression = parse_string_to_sympy(formula)
             result: list[None | bool] = [None for _ in range(self.rows)]
             for index, intermediate_result in enumerate(intermediate_results[formula_id]):
@@ -53,19 +55,20 @@ class ExampleAttempt(Attempt):
         return intermediates
 
     def _compute_score(self) -> float:
-        result: list[None | bool] = [None for _ in range(self.rows)]
+        results: list[None | bool] = [None for _ in range(self.rows)]
+
         for row in range(self.rows):
             input_name = get_result_input_name(row)
-            result_row = self.response.get(input_name)
-            if result_row:
-                result[row] = result_row == "1"
+            result = self.response.get(input_name)
+            if result:
+                results[row] = result == "1"
 
         score = 0
-        for row, row_result in zip(self.results, result):
-            if row_result == row:
+        for solution, result in zip(self.solution, results):
+            if solution == result:
                 score += 1
 
-        return score / self.rows if score else 0
+        return score / self.rows
 
     def get_expression(self):
         return generate_formula_string() if self.question.options.generate_formula else self.question.options.custom_formula.formula

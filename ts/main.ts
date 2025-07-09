@@ -5,13 +5,11 @@ import { setupButtonToAddIntermediateFormula, viewExistingIntermediateFormulas }
 
 export function init(attempt: object, [format, total_rows]: [OutputFormat, number]) {
     initFormulaElements(format);
-    // @ts-expect-error Attempt object definition is not here.
-    initFormulaInputElements(format, !attempt.readOnly);
-    // @ts-expect-error Attempt object definition is not here.
-    viewExistingIntermediateFormulas(format, !attempt.readOnly);
+    initFormulaInputElements(format, attempt);
+    viewExistingIntermediateFormulas(format, attempt);
     // @ts-expect-error Attempt object definition is not here.
     if (!attempt.readOnly) {
-        setupButtonToAddIntermediateFormula(total_rows, format);
+        setupButtonToAddIntermediateFormula(attempt, total_rows, format);
     }
 }
 
@@ -22,11 +20,12 @@ function initFormulaElements(format: OutputFormat) {
     }
 }
 
-function initFormulaInputElements(format: OutputFormat, isActive: boolean) {
+function initFormulaInputElements(format: OutputFormat, attempt: object) {
     const wrapperElements: NodeListOf<HTMLDivElement> = document.querySelectorAll(".formula-input-wrapper");
     for (const wrapperElement of wrapperElements) {
         const inputElement: HTMLInputElement = wrapperElement.querySelector(".formula-input")!;
         const displayElement: HTMLSpanElement = wrapperElement.querySelector(".formula-display")!;
-        new FormulaInput(wrapperElement, inputElement, displayElement, format, isActive);
+        // @ts-expect-error Attempt object definition is not here.
+        new FormulaInput(wrapperElement, inputElement, displayElement, format, !attempt.readOnly);
     }
 }
