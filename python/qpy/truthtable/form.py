@@ -12,7 +12,7 @@ from questionpy.form import (
     option,
     group,
 )
-
+from .formula import parse_string_to_sympy
 
 class GeneratedFormulaOptions(FormModel):
     variables = text_input("Variablen")
@@ -36,8 +36,14 @@ class MyModel(FormModel):
     @field_validator("custom_formula", mode="after")
     @classmethod
     def validate_custom_formula(cls, value: CustomFormula, values: ValidationInfo):
-        if not values.data.get("generate_formula", True) and not value.formula:
-            raise ValueError("Bitte geben Sie eine Formel an.")
+        if not values.data.get("generate_formula", True):
+            if not value.formula:
+                raise ValueError("Bitte geben Sie eine Formel an.")
+            else:
+                try:
+                    parse_string_to_sympy(value.formula)
+                except Exception:
+                    raise ValueError("Die Formel ist unzulässig.")
         return value
 
     @field_validator("generate_formula", mode="after")
