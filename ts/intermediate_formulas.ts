@@ -2,13 +2,14 @@ import { OutputFormat } from "./parser/parser";
 import { createFormulaInput, type FormulaInput } from "./formula_input_element";
 
 const tableElement = document.querySelector("table")!;
-const intermediateCounterElement = document.getElementById("intermediate-counter")! as HTMLInputElement;
-const intermediateFormulasElement = document.getElementById("intermediate-formulas")! as HTMLInputElement;
-const intermediateResultsElement = document.getElementById("intermediate-results")! as HTMLInputElement;
 
-export function setupButtonToAddIntermediateFormula(total_rows: number, format: OutputFormat) {
-    const addColumnButton = document.querySelector("#add-column")!;
-    let intermediateFormulaId = parseInt(intermediateCounterElement.value);
+export function setupButtonToAddIntermediateFormula(attempt: object, total_rows: number, format: OutputFormat) {
+    // @ts-expect-error Attempt object definition is not here.
+    const data = attempt.data as Record<string, unknown>;
+    const addColumnButton = document.querySelector<HTMLButtonElement>("#add-column")!;
+
+    const counter = data["intermediate-formula-counter"];
+    let intermediateFormulaId = typeof counter === "number" ? counter : 0;
 
     addColumnButton.addEventListener("click", () => {
         const rows = tableElement.querySelectorAll("tr");
@@ -18,8 +19,8 @@ export function setupButtonToAddIntermediateFormula(total_rows: number, format: 
             if (index === 0) {
                 // The first row of the table contains the formulas.
                 cellElement = document.createElement("th");
-                intermediateFormulaInput = createIntermediateFormulaInput("", intermediateFormulaId, format, true);
-                initValues(intermediateFormulaId, total_rows);
+                intermediateFormulaInput = createIntermediateFormulaInput("", intermediateFormulaId, format, true, data);
+                initValues(data, intermediateFormulaId, total_rows);
             } else {
                 cellElement = document.createElement("td");
                 intermediateFormulaInput = createIntermediateResultInput(
@@ -28,6 +29,7 @@ export function setupButtonToAddIntermediateFormula(total_rows: number, format: 
                     index - 1,
                     format,
                     true,
+                    data,
                 );
             }
 
@@ -35,28 +37,28 @@ export function setupButtonToAddIntermediateFormula(total_rows: number, format: 
             row.appendChild(cellElement);
         }
 
-        intermediateCounterElement.value = `${++intermediateFormulaId}`;
+        data["intermediate-formula-counter"] = ++intermediateFormulaId;
     });
 }
 
-function initValues(intermediateFormulaId: number, total_rows: number) {
-    // Populate the hidden input fields.
-    const intermediateFormulas = JSON.parse(intermediateFormulasElement.value) as Record<string, string>;
-    intermediateFormulas[`${intermediateFormulaId}`] = "";
-    intermediateFormulasElement.value = JSON.stringify(intermediateFormulas);
+function initValues(data: Record<string, unknown>, intermediateFormulaId: number, totalRows: number) {
+    const intermediateFormulas = (data["intermediate-formulas"] ?? {}) as Record<string, string>;
+    const intermediateResults = (data["intermediate-results"] ?? {}) as Record<string, string[]>;
 
-    const intermediateResults = JSON.parse(intermediateResultsElement.value) as Record<string, string[]>;
-    const intermediateResultsForFormula = [];
-    for (let i = 0; i < total_rows; i++) {
-        intermediateResultsForFormula.push("");
-    }
-    intermediateResults[`${intermediateFormulaId}`] = intermediateResultsForFormula;
-    intermediateResultsElement.value = JSON.stringify(intermediateResults);
+    intermediateFormulas[`${intermediateFormulaId}`] = "";
+    intermediateResults[`${intermediateFormulaId}`] = Array.from({ length: totalRows }, () => "");
+
+    data["intermediate-formulas"] = intermediateFormulas;
+    data["intermediate-results"] = intermediateResults;
 }
 
-export function viewExistingIntermediateFormulas(format: OutputFormat, isActive: boolean) {
-    const intermediateFormulas = JSON.parse(intermediateFormulasElement.value) as Record<string, string>;
-    const intermediateResults = JSON.parse(intermediateResultsElement.value) as Record<string, string[]>;
+export function viewExistingIntermediateFormulas(format: OutputFormat, attempt: object) {
+    // @ts-expect-error Attempt object definition is not here.
+    const data = attempt.data as Record<string, unknown>;
+    // @ts-expect-error Attempt object definition is not here.
+    const isActive = !attempt.readOnly;
+    const intermediateFormulas = (data["intermediate-formulas"] ?? {}) as Record<string, string>;
+    const intermediateResults = (data["intermediate-results"] ?? {}) as Record<string, string[]>;
 
     const rows = tableElement.querySelectorAll("tr");
 
@@ -67,6 +69,7 @@ export function viewExistingIntermediateFormulas(format: OutputFormat, isActive:
             parseInt(intermediateFormulaId),
             format,
             isActive,
+            data,
         );
         cellElement.appendChild(intermediateFormulaInput.element);
         rows[0].appendChild(cellElement);
@@ -79,6 +82,7 @@ export function viewExistingIntermediateFormulas(format: OutputFormat, isActive:
                 parseInt(index),
                 format,
                 isActive,
+                data,
             );
             cellElement.appendChild(intermediateResultInput.element);
             rows[parseInt(index) + 1].appendChild(cellElement);
@@ -91,16 +95,18 @@ function createIntermediateFormulaInput(
     intermediateFormulaId: number,
     format: OutputFormat,
     enabled: boolean,
+    data: Record<string, unknown>,
 ): FormulaInput {
     const formulaInputElement = createFormulaInput(formula, format, enabled);
     formulaInputElement.inputElement.setAttribute("data-intermediate-formula", `${intermediateFormulaId}`);
 
+    const intermediateFormulas = (data["intermediate-formulas"] ?? {}) as Record<string, string>;
+
     if (enabled) {
         formulaInputElement.inputElement.addEventListener("change", () => {
             const formulaId = formulaInputElement.inputElement.getAttribute("data-intermediate-formula")!;
-            const intermediateFormulas = JSON.parse(intermediateFormulasElement.value) as Record<string, string>;
             intermediateFormulas[formulaId] = formulaInputElement.getInput();
-            intermediateFormulasElement.value = JSON.stringify(intermediateFormulas);
+            data["intermediate-formulas"] = intermediateFormulas;
         });
     }
 
@@ -113,12 +119,15 @@ function createIntermediateResultInput(
     row: number,
     format: OutputFormat,
     enabled: boolean,
+    data: Record<string, unknown>,
 ): FormulaInput {
     const resultInputElement = createFormulaInput(formula, format, enabled);
     resultInputElement.inputElement.maxLength = 1;
     resultInputElement.inputElement.pattern = "0|1";
     resultInputElement.inputElement.setAttribute("data-intermediate-result", `${row}`);
     resultInputElement.inputElement.setAttribute("data-intermediate-result-belongs-to", `${intermediateFormulaId}`);
+
+    const intermediateResults = (data["intermediate-results"] ?? {}) as Record<string, string[]>;
 
     if (enabled) {
         resultInputElement.inputElement.addEventListener("change", () => {
@@ -127,9 +136,8 @@ function createIntermediateResultInput(
                 "data-intermediate-result-belongs-to",
             )!;
 
-            const intermediateResults = JSON.parse(intermediateResultsElement.value) as Record<string, string[]>;
             intermediateResults[belongsToFormulaId][resultId] = resultInputElement.getInput();
-            intermediateResultsElement.value = JSON.stringify(intermediateResults);
+            data["intermediate-results"] = intermediateResults;
         });
     }
 
