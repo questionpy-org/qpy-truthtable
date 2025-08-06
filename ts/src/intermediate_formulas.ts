@@ -19,7 +19,13 @@ export function setupButtonToAddIntermediateFormula(attempt: object, total_rows:
             if (index === 0) {
                 // The first row of the table contains the formulas.
                 cellElement = document.createElement("th");
-                intermediateFormulaInput = createIntermediateFormulaInput("", intermediateFormulaId, format, true, data);
+                intermediateFormulaInput = createIntermediateFormulaInput(
+                    "",
+                    intermediateFormulaId,
+                    format,
+                    true,
+                    data,
+                );
                 initValues(data, intermediateFormulaId, total_rows);
             } else {
                 cellElement = document.createElement("td");
