@@ -8,5 +8,5 @@
         "target": "ES2022",
         "types": []
     },
-    "include": ["ts/**/*.ts"]
+    "include": ["src/**/*.ts"]
 }

@@ -1,4 +1,4 @@
-// Generated from Bora.g4 by ANTLR 4.13.2
+// Generated from ../Bora.g4 by ANTLR 4.13.2
 
 import {ParseTreeVisitor} from 'antlr4';
 
