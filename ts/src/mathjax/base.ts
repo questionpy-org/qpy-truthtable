@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable */
 
 export abstract class BaseMathJaxHelper {
     protected abstract cdnUrl: string;
     protected mathjax: any;
-
-    private renderQueue: Promise<void> = Promise.resolve();
+    private loadPromise: Promise<void> | null = null;
 
     /**
      * MathJax helper.
@@ -21,7 +20,11 @@ export abstract class BaseMathJaxHelper {
      * @protected
      */
     protected loadFromCdn(): Promise<void> {
-        return new Promise((resolve, reject) => {
+        if (this.loadPromise) {
+            return this.loadPromise;
+        }
+
+        return this.loadPromise = new Promise((resolve, reject) => {
             const script = document.createElement("script");
             script.type = "text/javascript";
             script.src = this.cdnUrl;
@@ -30,7 +33,7 @@ export abstract class BaseMathJaxHelper {
             script.onload = () => {
                 // @ts-expect-error After loading the script, window.MathJax will exist.
                 this.mathjax = window.MathJax;
-                resolve();
+                resolve(this.mathjax.startup.promise);
             };
             script.onerror = () => reject(new Error(`Failed to load ${this.cdnUrl}.`));
 
@@ -51,11 +54,9 @@ export abstract class BaseMathJaxHelper {
     render(element: Element, inline: boolean): Promise<void> {
         // We do this to chain every render call. This also ensures that we only load once from the CDN:
         // https://docs.mathjax.org/en/v3.2-latest/web/typeset.html#handling-asynchronous-typesetting
-        return (this.renderQueue = this.renderQueue.then(() => {
-            if (this.mathjax === undefined) {
-                return this.loadFromCdn().then(() => this._render(element, inline));
-            }
-            return this._render(element, inline);
-        }));
+        if (this.mathjax === undefined) {
+            return this.loadFromCdn().then(() => this._render(element, inline));
+        }
+        return this._render(element, inline);
     }
 }
