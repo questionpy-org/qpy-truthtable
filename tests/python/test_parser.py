@@ -11,7 +11,7 @@ x, y, z = symbols('x y z')
 
 
 @pytest.fixture(autouse=True)
-def check_eval():
+def check_eval_not_called():
     with patch("builtins.eval") as mock_eval:
         yield
         mock_eval.assert_not_called()
@@ -29,9 +29,8 @@ def check_eval():
     ("x<->y->z", Equivalent(x, Implies(y, z))),
     ("xyz", And(And(x, y), z)),
     ("x+y+z", Or(Or(x, y), z)),
-    # TODO: right association
-    #("x->y->z", Implies(x, Implies(y, z))),
-    #("x<->y<->z", Equivalent(x, Equivalent(y, z))),
+    ("x->y->z", Implies(x, Implies(y, z))),
+    ("x<->y<->z", Equivalent(x, Equivalent(y, z))),
     ("xy->z", Implies(And(x, y), z)),
     ("x->yz", Implies(x, And(y, z))),
     ("x+y->z", Implies(Or(x, y), z)),
