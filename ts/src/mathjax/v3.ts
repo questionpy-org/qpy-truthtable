@@ -4,10 +4,11 @@ import { BaseMathJaxHelper } from "./base";
 /**
  * Uses MathJax 3 to render LaTeX.
  *
- * Docs: https://docs.mathjax.org/en/v3.2-latest/
+ * Docs: https://docs.mathjax.org/en/v3.2/
  */
 export class MathJax3Helper extends BaseMathJaxHelper {
     protected cdnUrl = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js";
+    private queue: Promise<void> = Promise.resolve();
 
     protected loadFromCdn() {
         // Configure MathJax.
@@ -34,8 +35,9 @@ export class MathJax3Helper extends BaseMathJaxHelper {
     }
 
     protected _render(element: Element, inline: boolean): Promise<void> {
-        // Ensure that MathJax is fully initialized.
-        return this.mathjax.startup.promise.then(() => {
+        // We need to manually chain every render call.
+        // https://docs.mathjax.org/en/v3.2/web/typeset.html#handling-asynchronous-typesetting
+        return this.queue = this.queue.then(() => {
             // Get the delimiters.
             const inlineDelimiters = this.mathjax.config.tex?.inlineMath?.[0] ?? ["\\(", "\\)"];
             const displayDelimiters = this.mathjax.config.tex?.displayMath?.[0] ?? ["\\[", "\\]"];
