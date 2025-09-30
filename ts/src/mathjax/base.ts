@@ -15,7 +15,7 @@ export abstract class BaseMathJaxHelper {
     }
 
     /**
-     * Loads MathJax from a CDN.
+     * Loads MathJax from a CDN and initializes it.
      *
      * @protected
      */
@@ -33,6 +33,8 @@ export abstract class BaseMathJaxHelper {
             script.onload = () => {
                 // @ts-expect-error After loading the script, window.MathJax will exist.
                 this.mathjax = window.MathJax;
+
+                // We return the startup promise to ensure that MathJax is fully initialized before using it.
                 resolve(this.mathjax.startup.promise);
             };
             script.onerror = () => reject(new Error(`Failed to load ${this.cdnUrl}.`));
@@ -52,8 +54,6 @@ export abstract class BaseMathJaxHelper {
      * Renders LaTeX inside an element. Loads MathJax from a CDN if necessary.
      */
     render(element: Element, inline: boolean): Promise<void> {
-        // We do this to chain every render call. This also ensures that we only load once from the CDN:
-        // https://docs.mathjax.org/en/v3.2-latest/web/typeset.html#handling-asynchronous-typesetting
         if (this.mathjax === undefined) {
             return this.loadFromCdn().then(() => this._render(element, inline));
         }

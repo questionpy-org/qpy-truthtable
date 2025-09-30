@@ -24,7 +24,7 @@ export function renderLaTeX(element: Element, inline: boolean = true): Promise<v
                 return Promise.reject(new Error("Only MathJax 3.x and 4.x are supported."));
             }
         } else {
-            // We should in theory switch to MathJax4 as the default, but we might need to change our UI.
+            // We should in theory switch to MathJax 4 as the default, but we might need to change our UI.
             mathJaxHelper = new MathJax3Helper();
         }
     }
