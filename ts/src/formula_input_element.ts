@@ -125,8 +125,6 @@ export class FormulaInput {
         this.#inputElement.addEventListener("input", () => {
             this.setInputValidity("valid");
         });
-
-        this.#displayElement.addEventListener("click", () => this.viewInputField());
     }
 }
 

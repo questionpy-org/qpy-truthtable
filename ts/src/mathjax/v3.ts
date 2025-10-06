@@ -37,7 +37,7 @@ export class MathJax3Helper extends BaseMathJaxHelper {
     protected _render(element: Element, inline: boolean): Promise<void> {
         // We need to manually chain every render call.
         // https://docs.mathjax.org/en/v3.2/web/typeset.html#handling-asynchronous-typesetting
-        return this.queue = this.queue.then(() => {
+        return (this.queue = this.queue.then(() => {
             // Get the delimiters.
             const inlineDelimiters = this.mathjax.config.tex?.inlineMath?.[0] ?? ["\\(", "\\)"];
             const displayDelimiters = this.mathjax.config.tex?.displayMath?.[0] ?? ["\\[", "\\]"];
@@ -48,6 +48,6 @@ export class MathJax3Helper extends BaseMathJaxHelper {
 
             // Perform the rendering.
             return this.mathjax.typesetPromise([element]);
-        });
+        }));
     }
 }

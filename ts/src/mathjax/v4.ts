@@ -41,6 +41,6 @@ export class MathJax4Helper extends BaseMathJaxHelper {
         // Add the delimiters.
         element.textContent = `${openingDelimiter} ${element.textContent} ${closingDelimiter}`;
 
-        return this.mathjax.typesetPromise([element])
+        return this.mathjax.typesetPromise([element]);
     }
 }

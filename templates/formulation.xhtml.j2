@@ -23,10 +23,7 @@
 
                 <!-- Input field for the results of the formula. -->
                 <td>
-                    <div class="formula-input-wrapper">
-                        <input type="text" name="{{ get_result_input_name(row) }}" maxlength="1" pattern="0|1" class="formula-input" style="display: none" qpy:correct-response="{{ get_correct_response(row) }}" />
-                        <span class="formula-display" style="display: none;" />
-                    </div>
+                  <input type="text" name="{{ get_result_input_name(row) }}" maxlength="1" pattern="0|1" class="formula-input" qpy:correct-response="{{ get_correct_response(row) }}" />
                 </td>
             </tr>
             {% endfor %}

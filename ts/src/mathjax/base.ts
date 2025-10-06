@@ -24,7 +24,7 @@ export abstract class BaseMathJaxHelper {
             return this.loadPromise;
         }
 
-        return this.loadPromise = new Promise((resolve, reject) => {
+        return (this.loadPromise = new Promise((resolve, reject) => {
             const script = document.createElement("script");
             script.type = "text/javascript";
             script.src = this.cdnUrl;
@@ -40,7 +40,7 @@ export abstract class BaseMathJaxHelper {
             script.onerror = () => reject(new Error(`Failed to load ${this.cdnUrl}.`));
 
             document.head.appendChild(script);
-        });
+        }));
     }
 
     /**
