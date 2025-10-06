@@ -1,0 +1,35 @@
+[project]
+name = "qpy-truthtable"
+version = "0.1.0"
+license = "MIT"
+requires-python = ">=3.12, <4.0"
+
+[dependency-groups]
+dev = [
+  "questionpy-sdk @ git+https://github.com/questionpy-org/questionpy-sdk.git",
+  "antlr4-python3-runtime (>=4.13.2,<5.0.0)",
+  "antlr4-tools (>=0.2.2,<0.3.0)",
+  "sympy (>=1.14.0,<2.0.0)",
+  "poethepoet (>=0.37.0,<0.38.0)",
+]
+
+test = [
+  "pytest (>=8.4.2,<9.0.0)"
+]
+
+[project.scripts]
+bora-repl = "truthtable.formula.parser.__main__:repl"
+
+[tool.poetry]
+packages = [{ include = "truthtable", from = "python/qpy" }]
+
+[tool.poe.tasks]
+_antlr-python = "antlr4 -Dlanguage=Python3 -visitor -no-listener -o python/qpy/truthtable/formula/parser/generated -Xexact-output-dir Bora.g4"
+_antlr-ts = "antlr4 -Dlanguage=TypeScript -visitor -no-listener -o ts/src/parser/generated -Xexact-output-dir Bora.g4"
+antlr = ["_antlr-python", "_antlr-ts"]
+npm = { cwd = "ts", cmd = "npm" }
+test = "pytest"
+
+
+[tool.pytest.ini_options]
+pythonpath = "python/qpy"

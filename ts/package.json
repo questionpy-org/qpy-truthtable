@@ -6,12 +6,9 @@
     "license": "MIT",
     "type": "module",
     "scripts": {
-        "build": "npm run antlr && rollup -c --failAfterWarnings",
+        "build": "rollup -c --failAfterWarnings",
         "lint": "npx eslint src --ignore-pattern './src/parser/generated/*'",
-        "fmt": "npx prettier src --write",
-        "antlr": "npm run antlr:py & npm run antlr:js",
-        "antlr:py": "antlr4 -Dlanguage=Python3 -visitor -no-listener -o ../python/qpy/truthtable/formula/_parser/generated -Xexact-output-dir ../Bora.g4 && rimraf ../python/qpy/truthtable/formula/_parser/generated/*.{interp,tokens}",
-        "antlr:js": "antlr4 -Dlanguage=TypeScript -visitor -no-listener -o src/parser/generated -Xexact-output-dir ../Bora.g4 && rimraf src/parser/generated/*.{interp,tokens}"
+        "fmt": "npx prettier src --write"
     },
     "dependencies": {
         "antlr4": "4.13.2"

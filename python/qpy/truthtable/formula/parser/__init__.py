@@ -59,8 +59,8 @@ class BoraVisitorImplementation(BoraVisitor):
 
 
 class BoraErrorListener(ErrorListener):
-    def syntaxError(self, _recognizer, _offending_symbol, _line, _column, _msg, _e):
-        raise BoraException("Syntax error")
+    def syntaxError(self, _recognizer, _offending_symbol, _line, _column, msg, _e):
+        raise BoraException(f"Syntax error: {msg}")
 
 
 def parse_string_to_sympy(formula: str) -> Any:

@@ -1,5 +1,3 @@
-import json
-
 from sympy.logic.boolalg import truth_table, ibin
 
 from questionpy import Attempt, Question

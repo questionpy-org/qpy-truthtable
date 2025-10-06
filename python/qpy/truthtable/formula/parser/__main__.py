@@ -1,6 +1,7 @@
-from . import parse_string_to_sympy
+from . import parse_string_to_sympy, BoraException
 
-if __name__ == "__main__":
+
+def repl():
     import readline
 
     while True:
@@ -8,7 +9,13 @@ if __name__ == "__main__":
             string = input("> ")
             parsed = parse_string_to_sympy(string)
             print(parsed)
+        except BoraException as e:
+            print(e)
         except (KeyboardInterrupt, EOFError):
             break
         finally:
             print()
+
+
+if __name__ == "__main__":
+    repl()

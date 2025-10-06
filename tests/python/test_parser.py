@@ -4,7 +4,7 @@ import pytest
 from sympy import symbols
 from sympy.logic.boolalg import false, true, And, Nand, Nor, Not, Or, Xor, Implies, Equivalent
 
-from truthtable.python.qpy.truthtable.formula import parse_string_to_sympy
+from truthtable.formula import parse_string_to_sympy
 
 
 x, y, z = symbols('x y z')
