@@ -25,7 +25,7 @@ export function renderLaTeX(element: Element, inline: boolean = true): Promise<v
             }
         } else {
             // We should in theory switch to MathJax 4 as the default, but we might need to change our UI.
-            mathJaxHelper = new MathJax3Helper();
+            mathJaxHelper = new MathJax4Helper();
         }
     }
 

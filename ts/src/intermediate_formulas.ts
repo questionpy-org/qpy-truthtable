@@ -1,7 +1,46 @@
 import { OutputFormat } from "./parser/parser";
-import { createFormulaInput, type FormulaInput } from "./formula_input_element";
+import { createFormulaInput } from "./formula_input_element";
 
 const tableElement = document.querySelector("table")!;
+
+function createIntermediateFormulaHeader(
+    formula: string,
+    formulaId: number,
+    format: OutputFormat,
+    data: Record<string, unknown>,
+    enabled: boolean,
+): HTMLTableCellElement {
+    const cellElement = document.createElement("th");
+
+    const formulaInput = createFormulaInput(formula, format, enabled);
+    cellElement.appendChild(formulaInput.element);
+
+    if (enabled) {
+        formulaInput.inputElement.addEventListener("change", () => {
+            const formulas = (data["intermediate-formulas"] ?? {}) as Record<string, string>;
+            formulas[formulaId] = formulaInput.getInput();
+            data["intermediate-formulas"] = formulas;
+        });
+
+        const editButton = document.createElement("button");
+        editButton.tabIndex = -1;
+        editButton.innerHTML = "✏️";
+
+        editButton.addEventListener("mousedown", (e) => {
+            // This prevents the edit button to trigger the blur event of the input element.
+            e.preventDefault();
+        });
+
+        editButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            formulaInput.viewInputField();
+        });
+        cellElement.appendChild(editButton);
+    }
+
+    return cellElement;
+}
 
 export function setupButtonToAddIntermediateFormula(attempt: object, total_rows: number, format: OutputFormat) {
     // @ts-expect-error Attempt object definition is not here.
@@ -15,31 +54,22 @@ export function setupButtonToAddIntermediateFormula(attempt: object, total_rows:
         const rows = tableElement.querySelectorAll("tr");
 
         for (const [index, row] of rows.entries()) {
-            let cellElement, intermediateFormulaInput;
+            let cellElement;
             if (index === 0) {
                 // The first row of the table contains the formulas.
-                cellElement = document.createElement("th");
-                intermediateFormulaInput = createIntermediateFormulaInput(
+                cellElement = createIntermediateFormulaHeader(
                     "",
                     intermediateFormulaId,
                     format,
-                    true,
                     data,
+                    // @ts-expect-error Attempt object definition is not here.
+                    !attempt.readOnly,
                 );
                 initValues(data, intermediateFormulaId, total_rows);
             } else {
-                cellElement = document.createElement("td");
-                intermediateFormulaInput = createIntermediateResultInput(
-                    "",
-                    intermediateFormulaId,
-                    index - 1,
-                    format,
-                    true,
-                    data,
-                );
+                cellElement = createIntermediateResultInput("", intermediateFormulaId, index - 1, true, data);
             }
 
-            cellElement.appendChild(intermediateFormulaInput.element);
             row.appendChild(cellElement);
         }
 
@@ -58,7 +88,7 @@ function initValues(data: Record<string, unknown>, intermediateFormulaId: number
     data["intermediate-results"] = intermediateResults;
 }
 
-export function viewExistingIntermediateFormulas(format: OutputFormat, attempt: object) {
+export function initIntermediateFormulas(format: OutputFormat, attempt: object) {
     // @ts-expect-error Attempt object definition is not here.
     const data = attempt.data as Record<string, unknown>;
     // @ts-expect-error Attempt object definition is not here.
@@ -69,83 +99,58 @@ export function viewExistingIntermediateFormulas(format: OutputFormat, attempt: 
     const rows = tableElement.querySelectorAll("tr");
 
     for (const [intermediateFormulaId, intermediateFormula] of Object.entries(intermediateFormulas)) {
-        const cellElement = document.createElement("th");
-        const intermediateFormulaInput = createIntermediateFormulaInput(
+        const cellElement = createIntermediateFormulaHeader(
             intermediateFormula,
             parseInt(intermediateFormulaId),
             format,
-            isActive,
             data,
+            isActive,
         );
-        cellElement.appendChild(intermediateFormulaInput.element);
         rows[0].appendChild(cellElement);
 
         for (const [index, intermediateResult] of Object.entries(intermediateResults[intermediateFormulaId])) {
-            const cellElement = document.createElement("td");
-            const intermediateResultInput = createIntermediateResultInput(
+            const cellElement = createIntermediateResultInput(
                 intermediateResult,
                 parseInt(intermediateFormulaId),
                 parseInt(index),
-                format,
                 isActive,
                 data,
             );
-            cellElement.appendChild(intermediateResultInput.element);
             rows[parseInt(index) + 1].appendChild(cellElement);
         }
     }
-}
-
-function createIntermediateFormulaInput(
-    formula: string,
-    intermediateFormulaId: number,
-    format: OutputFormat,
-    enabled: boolean,
-    data: Record<string, unknown>,
-): FormulaInput {
-    const formulaInputElement = createFormulaInput(formula, format, enabled);
-    formulaInputElement.inputElement.setAttribute("data-intermediate-formula", `${intermediateFormulaId}`);
-
-    const intermediateFormulas = (data["intermediate-formulas"] ?? {}) as Record<string, string>;
-
-    if (enabled) {
-        formulaInputElement.inputElement.addEventListener("change", () => {
-            const formulaId = formulaInputElement.inputElement.getAttribute("data-intermediate-formula")!;
-            intermediateFormulas[formulaId] = formulaInputElement.getInput();
-            data["intermediate-formulas"] = intermediateFormulas;
-        });
-    }
-
-    return formulaInputElement;
 }
 
 function createIntermediateResultInput(
     formula: string,
     intermediateFormulaId: number,
     row: number,
-    format: OutputFormat,
     enabled: boolean,
     data: Record<string, unknown>,
-): FormulaInput {
-    const resultInputElement = createFormulaInput(formula, format, enabled);
-    resultInputElement.inputElement.maxLength = 1;
-    resultInputElement.inputElement.pattern = "0|1";
-    resultInputElement.inputElement.setAttribute("data-intermediate-result", `${row}`);
-    resultInputElement.inputElement.setAttribute("data-intermediate-result-belongs-to", `${intermediateFormulaId}`);
+): HTMLTableCellElement {
+    const cellElement = document.createElement("td");
+    // Create the input element for the result.
+    const resultInputElement = document.createElement("input");
+    resultInputElement.value = formula;
+    resultInputElement.maxLength = 1;
+    resultInputElement.pattern = "0|1";
+    resultInputElement.disabled = !enabled;
 
     const intermediateResults = (data["intermediate-results"] ?? {}) as Record<string, string[]>;
 
     if (enabled) {
-        resultInputElement.inputElement.addEventListener("change", () => {
-            const resultId = parseInt(resultInputElement.inputElement.getAttribute("data-intermediate-result")!);
-            const belongsToFormulaId = resultInputElement.inputElement.getAttribute(
-                "data-intermediate-result-belongs-to",
-            )!;
-
-            intermediateResults[belongsToFormulaId][resultId] = resultInputElement.getInput();
+        resultInputElement.addEventListener("change", () => {
+            intermediateResults[intermediateFormulaId][row] = resultInputElement.value;
             data["intermediate-results"] = intermediateResults;
+        });
+
+        resultInputElement.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+            }
         });
     }
 
-    return resultInputElement;
+    cellElement.appendChild(resultInputElement);
+    return cellElement;
 }
